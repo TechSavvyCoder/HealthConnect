@@ -4,7 +4,7 @@ Final project for the course CSIS 3175
 ## MEMBERS:
 * [Diego Pinlac II](https://github.com/TechSavvyCoder)
 * [Yaolong Liu](https://github.com/YaolongLiu)
-* [Charlie Medialdea]
+* [Charlie Medialdea](https://github.com/charlz1202) 
 
 ## TERM PROJECT:
 The app will assist the doctor in managing patient records, appointments, tracking treatments, and logging medications used during consultations. This project aims to help you practice mobile app development using Android Studio and database management with SQLite.
