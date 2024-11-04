@@ -18,7 +18,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 finish(); // end the life cycle of the SplashActivity by closing the activity
-                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                //startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                startActivity(new Intent(SplashScreenActivity.this, OnboardingStep1Activity.class));
             }
         };
 

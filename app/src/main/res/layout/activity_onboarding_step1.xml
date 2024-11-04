@@ -5,6 +5,94 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".OnboardingStep1Activity">
+
+    <!-- Skip Button -->
+    <TextView
+        android:id="@+id/tvSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="28dp"
+        android:text="@string/onboarding1_btnSkip"
+        android:textColor="#666666"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ImageView for Doctor Image -->
+    <ImageView
+        android:id="@+id/img_doctorFemale"
+        android:layout_width="329dp"
+        android:layout_height="518dp"
+        android:contentDescription="@string/onboarding1_img"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.183"
+        app:srcCompat="@drawable/doctor_female" />
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/tv_onboardingInfo1"
+        android:layout_width="292dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/onboarding1_info"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.344"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_doctorFemale" />
+
+    <!-- Steps Indicator -->
+
+    <!-- Next Button -->
+
+    <LinearLayout
+        android:id="@+id/stepsIndicatorLayout"
+        android:layout_width="69dp"
+        android:layout_height="9dp"
+        android:layout_marginBottom="70dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_onboarding1BtnNext"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- First Step Circle (Inactive) -->
+        <View
+            android:layout_width="25dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/step_active" />
+
+        <!-- Second Step Circle (Active) -->
+        <View
+            android:layout_width="25dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/step_inactive" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/img_onboarding1BtnNext"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/btn_round"
+        android:contentDescription="@string/onboarding1_btnNext"
+        android:padding="8dp"
+        android:src="@drawable/vector_chevron_right_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
