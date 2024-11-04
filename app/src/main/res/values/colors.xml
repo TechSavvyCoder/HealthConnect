@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#221F1F</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#221F1F</color>
+    <color name="blue">#407CE2</color>
+
+    <color name="primary_button">#407CE2</color>
+    <color name="primary_button_font">#FFFFFF</color>
+    <color name="secondary_button">#FFFFFF</color>
+    <color name="secondary_button_font">#407CE2</color>
 </resources>
