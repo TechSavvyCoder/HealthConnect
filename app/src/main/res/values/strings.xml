@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">HealthConnect</string>
+    <string name="app_logo">HealthConnect logo</string>
+
+    <string name="splash_bg">SplashScreen Background</string>
+    <string name="splash_text1">Medical app</string>
+    <string name="onboarding1_info">Check your Health and Medical records</string>
+    <string name="onboarding1_skip">Skip</string>
+    <string name="onboarding2_info">Access your appointments</string>
+    <string name="onboarding3_info1">Let\'s get started!</string>
+    <string name="onboarding3_info2">Login to Connect with your Health Partner</string>
+    <string name="onboarding3_login">Login</string>
+    <string name="onboarding3_signup">Sign Up</string>
+    <string name="login_title">Sign In</string>
+    <string name="login_forgotpassword">Forgot password?</string>
+    <string name="login_donthaveaccount">Don\'t have an account?</string>
+    <string name="login_google">Sign in with Google</string>
+    <string name="login_fb">Sign in with Facebook</string>
+    <string name="registration_policy">I agree to the healthcare Terms of Service and Privacy Policy</string>
+    <string name="registration_haveaccount">Already have an account</string>
+
+    <!--Strings for activity_patient_list_item.xml -->
+    <string name="patient_name">John Doe</string>
+    <string name="patient_age">Age: 45</string>
+    <string name="patient_sex">Sex: Male</string>
+    <string name="patient_mrn">MRN: 123456</string>
+
+    <!-- Strings for activity_patient_chart.xml -->
+    <string name="patient_image_desc">Image of a patient</string>
+
 </resources>
