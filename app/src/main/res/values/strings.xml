@@ -5,14 +5,19 @@
     <string name="splash_bg">SplashScreen Background</string>
     <string name="splash_text1">Medical app</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_btnSkip">Skip</string>
+    <string name="onboarding_btnNext">Next</string>
+
     <!-- Onboarding 1 -->
     <string name="onboarding1_img">Female Doctor</string>
     <string name="onboarding1_info">Check your Health and Medical records</string>
-    <string name="onboarding1_btnSkip">Skip</string>
-    <string name="onboarding1_btnNext">Next</string>
 
-
+    <!-- Onboarding 2 -->
+    <string name="onboarding2_img">Male Doctor</string>
     <string name="onboarding2_info">Access your appointments</string>
+
+    <!-- Onboarding 3 -->
     <string name="onboarding3_info1">Let\'s get started!</string>
     <string name="onboarding3_info2">Login to Connect with your Health Partner</string>
     <string name="onboarding3_login">Login</string>

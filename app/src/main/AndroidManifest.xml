@@ -13,6 +13,12 @@
         android:theme="@style/Theme.HealthConnect"
         tools:targetApi="31">
         <activity
+            android:name=".OnboardingStep3Activity"
+            android:exported="false" />
+        <activity
+            android:name=".OnboardingStep2Activity"
+            android:exported="false" />
+        <activity
             android:name=".OnboardingStep1Activity"
             android:exported="false" />
         <activity
