@@ -173,7 +173,7 @@
         android:clickable="true"/>
 
     <Button
-        android:id="@+id/onboarding3_login"
+        android:id="@+id/onboarding3_signup"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
