@@ -106,14 +106,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.moveToFirst()) {
             // Extract user details from the cursor
-            String user_id = cursor.getString(cursor.getColumnIndex(USER_COLUMN_ID));
-            String username = cursor.getString(cursor.getColumnIndex(USER_COLUMN_USERNAME));
-            String password = cursor.getString(cursor.getColumnIndex(USER_COLUMN_USERPASS));
-            String user_role = cursor.getString(cursor.getColumnIndex(USER_COLUMN_USERROLE));
-            String user_email = cursor.getString(cursor.getColumnIndex(USER_COLUMN_EMAIL));
-            String user_firstname = cursor.getString(cursor.getColumnIndex(USER_COLUMN_FIRSTNAME));
-            String user_lastname = cursor.getString(cursor.getColumnIndex(USER_COLUMN_LASTNAME));
-            String user_dob = cursor.getString(cursor.getColumnIndex(USER_COLUMN_DATEOFBIRTH));
+            int int_userID = cursor.getColumnIndex(USER_COLUMN_ID);
+            int int_userName = cursor.getColumnIndex(USER_COLUMN_USERNAME);
+            int int_userPass = cursor.getColumnIndex(USER_COLUMN_USERPASS);
+            int int_userRole = cursor.getColumnIndex(USER_COLUMN_USERROLE);
+            int int_userEmail = cursor.getColumnIndex(USER_COLUMN_EMAIL);
+            int int_userFName = cursor.getColumnIndex(USER_COLUMN_FIRSTNAME);
+            int int_userLName = cursor.getColumnIndex(USER_COLUMN_LASTNAME);
+            int int_userDOB = cursor.getColumnIndex(USER_COLUMN_DATEOFBIRTH);
+
+            String user_id = cursor.getString(int_userID);
+            String username = cursor.getString(int_userName);
+            String password = cursor.getString(int_userPass);
+            String user_role = cursor.getString(int_userRole);
+            String user_email = cursor.getString(int_userEmail);
+            String user_firstname = cursor.getString(int_userFName);
+            String user_lastname = cursor.getString(int_userLName);
+            String user_dob = cursor.getString(int_userDOB);
 
             cursor.close();
 
