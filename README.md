@@ -37,7 +37,7 @@ The app will assist the doctor in managing patient records, appointments, tracki
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/TechSavvyCoder/HealthConnect-v2.git
+   git clone https://github.com/TechSavvyCoder/HealthConnect.git
 
 ### Contact
 [Contact the developer](mailto:diegopinlac@gmail.com)
