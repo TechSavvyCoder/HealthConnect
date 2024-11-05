@@ -14,26 +14,39 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private static final String PREFS_NAME = "OnboardingProcedures";
     private static final String KEY_IS_FIRST_RUN = "isFirstRun";
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-//        // Check if it's the first run
-//        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-//        boolean isFirstRun = preferences.getBoolean(KEY_IS_FIRST_RUN, true);
-//
-//        // Set up a delay if it's the first run
+        // SharedPreferences instance
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        // Check if it's the first run
+        boolean isFirstRun = preferences.getBoolean(KEY_IS_FIRST_RUN, true);
+        boolean isLoggedIn = preferences.getBoolean(KEY_IS_LOGGED_IN, false); // Check if the user is logged in
+
+        // Set up a delay before transitioning to the next activity
 //        new Handler().postDelayed(() -> {
-//            if(isFirstRun){
+//            if (isFirstRun) {
+//                // If it's the first run, show Onboarding Step 1
 //                startActivity(new Intent(SplashScreenActivity.this, OnboardingStep1Activity.class));
+//
+//                // Update shared preferences to indicate that onboarding has been completed
 //                preferences.edit().putBoolean(KEY_IS_FIRST_RUN, false).apply();
 //            } else {
-//                startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
+//                if (isLoggedIn) {
+//                    // If not first run and user is logged in, go to MainActivity
+//                    startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+//                } else {
+//                    // If not first run and user is not logged in, show Onboarding Step 3
+//                    startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
+//                }
 //            }
-//            finish();
-//        }, 3000);
+//            finish(); // Close the SplashScreenActivity
+//        }, 3000); // 3 seconds delay for splash screen
 
 
         // Temp Timer (To show the onboarding process)

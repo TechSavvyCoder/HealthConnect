@@ -29,7 +29,7 @@
 
     <!-- Sign Up -->
     <string name="txt_usernameHint">Enter your username</string>
-    <string name="txt_confirmPassHint">Enter your password again</string>
+    <string name="txt_confirmPassHint">Confirm password</string>
     <string name="txt_userFirstNameHint">Enter your first name</string>
     <string name="txt_userLastNameHint">Enter your last name</string>
     <string name="txt_userDateOfBirthHint">Enter your Birthdate</string>

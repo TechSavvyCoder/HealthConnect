@@ -43,7 +43,7 @@
         android:contentDescription="@string/txt_emailHint"
         android:drawableLeft="@drawable/vector_email_24"
         android:drawablePadding="10dp"
-        android:hint="@string/txt_emailHint"
+        android:hint="@string/txt_usernameHint"
         android:importantForAccessibility="yes"
         android:inputType="textEmailAddress"
         android:paddingStart="25dp"
@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/app_name" />
 
     <EditText
-        android:id="@+id/txt_passHint"
+        android:id="@+id/txtPass"
         android:layout_width="324dp"
         android:layout_height="51dp"
         android:layout_marginTop="16dp"
@@ -67,7 +67,7 @@
         android:drawablePadding="10dp"
         android:hint="@string/txt_passHint"
         android:importantForAccessibility="yes"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
         android:paddingStart="25dp"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
@@ -89,6 +89,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_passHint" />
+        app:layout_constraintTop_toBottomOf="@+id/txtPass" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

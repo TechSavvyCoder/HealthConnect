@@ -2,6 +2,7 @@ package com.example.healthconnect;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.SyncStateContract;
@@ -54,6 +55,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
     }
 
+    // Function to add new user
     void addUser(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String date_created){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -73,6 +75,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "User Registration Failed!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Function to check user credentials
+    public boolean checkUserCredentials(String user_name, String user_pass) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_USERNAME + " =? AND " + COLUMN_USERPASS + " =?";
+        Cursor cursor = db.rawQuery(query, new String[]{user_name, user_pass});
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.close();
+            return true;
+        } else {
+            if (cursor != null) {
+                cursor.close();
+            }
+            return false;
         }
     }
 }
