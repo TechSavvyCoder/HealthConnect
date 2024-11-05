@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Check the credentials against the database
                 if (dbHelper.checkUserCredentials(username, password, LoginActivity.this)) {
                     // User exists, proceed to MainActivity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, Doctor_PatientListActivity.class);
                     startActivity(intent);
                     finish();  // Optional: Close the LoginActivity
                 } else {

@@ -18,20 +18,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class SignUpActivity extends AppCompatActivity {
+public class Doctor_AddPatientActivity extends AppCompatActivity {
 
-    EditText txtUserName, txtUserEmail, txtUserPass, txtUserConfirmPass, txtUserFirstName, txtUserLastName, txtDateOfBirth;
+    EditText txtUserName, txtUserEmail, txtUserPass, txtUserFirstName, txtUserLastName, txtDateOfBirth;
     Button btnSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_doctor_add_patient);
 
         txtUserName = (EditText) findViewById(R.id.txtUserName);
         txtUserEmail = (EditText) findViewById(R.id.txtEmail);
-        txtUserPass = (EditText) findViewById(R.id.txtUserPass);
-        txtUserConfirmPass = (EditText) findViewById(R.id.txtUserConfirmPass);
         txtUserFirstName = (EditText) findViewById(R.id.txtUserFirstName);
         txtUserLastName = (EditText) findViewById(R.id.txtUserLastName);
 
@@ -49,21 +47,18 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (txtUserPass.getText().toString().equals(txtUserConfirmPass.getText().toString())) {
-                    MyDatabaseHelper myDB = new MyDatabaseHelper(SignUpActivity.this);
-                    myDB.addUser(
-                            txtUserName.getText().toString().trim(),
-                            txtUserPass.getText().toString().trim(),
-                            "Doctor",
-                            txtUserEmail.getText().toString().trim(),
-                            txtUserFirstName.getText().toString().trim(),
-                            txtUserLastName.getText().toString().trim(),
-                            txtDateOfBirth.getText().toString().trim(),
-                            formattedDate
-                    );
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                }
+                MyDatabaseHelper myDB = new MyDatabaseHelper(Doctor_AddPatientActivity.this);
+                myDB.addUser(
+                        txtUserName.getText().toString().trim(),
+                        "123456",
+                        "Patient",
+                        txtUserEmail.getText().toString().trim(),
+                        txtUserFirstName.getText().toString().trim(),
+                        txtUserLastName.getText().toString().trim(),
+                        txtDateOfBirth.getText().toString().trim(),
+                        formattedDate
+                );
+                Toast.makeText(Doctor_AddPatientActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
             }
         });
     }

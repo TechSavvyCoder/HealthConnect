@@ -34,14 +34,14 @@
     <string name="txt_userLastNameHint">Enter your last name</string>
     <string name="txt_userDateOfBirthHint">Enter your Birthdate</string>
 
+    <!-- Add new patient -->
+    <string name="txtPatient_usernameHint">Enter username</string>
+    <string name="txtPatient_emailHint">Enter email</string>
+    <string name="txtPatient_passHint">Enter password</string>
+    <string name="txtPatient_userFirstNameHint">Enter first name</string>
+    <string name="txtPatient_userLastNameHint">Enter last name</string>
+    <string name="txtPatient_userDateOfBirthHint">Enter Birthdate</string>
+    <string name="btnAddPatient">Submit</string>
 
-    <!--Strings for activity_patient_list_item.xml -->
-    <string name="patient_name">John Doe</string>
-    <string name="patient_age">Age: 45</string>
-    <string name="patient_sex">Sex: Male</string>
-    <string name="patient_mrn">MRN: 123456</string>
-
-    <!-- Strings for activity_patient_chart.xml -->
-    <string name="patient_image_desc">Image of a patient</string>
 
 </resources>

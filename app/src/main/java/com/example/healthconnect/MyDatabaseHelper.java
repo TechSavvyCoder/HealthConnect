@@ -18,6 +18,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "HealthConnect.db";
     private static final int DATABASE_VERSION = 1;
 
+    // User Table
     private static final String USER_TABLE_NAME = "user";
     private static final String USER_COLUMN_ID = "user_id";
     private static final String USER_COLUMN_USERNAME = "user_name";
@@ -30,6 +31,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String USER_COLUMN_DATECREATED = "date_created";
     private static final String USER_COLUMN_DATEUPDATED = "date_updated";
 
+    // Patient Table
     private static final String PATIENT_TABLE = "patient";
     private static final String PATIENT_COLUMN_ID = "patient_id";
     private static final String PATIENT_COLUMN_USERID = "user_id";
