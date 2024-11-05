@@ -3,7 +3,7 @@
     <string name="app_logo">HealthConnect logo</string>
 
     <string name="splash_bg">SplashScreen Background</string>
-    <string name="splash_text1">Medical app</string>
+    <string name="app_description">Medical app</string>
 
     <!-- Onboarding -->
     <string name="onboarding_btnSkip">Skip</string>
@@ -23,6 +23,7 @@
     <string name="onboarding3_login">Login</string>
     <string name="onboarding3_signup">Sign Up</string>
     <string name="login_title">Sign In</string>
+
     <string name="login_forgotpassword">Forgot password?</string>
     <string name="login_donthaveaccount">Don\'t have an account?</string>
     <string name="login_google">Sign in with Google</string>

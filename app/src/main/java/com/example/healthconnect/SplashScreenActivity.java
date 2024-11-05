@@ -20,19 +20,32 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        // Check if it's the first run
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean isFirstRun = preferences.getBoolean(KEY_IS_FIRST_RUN, true);
+//        // Check if it's the first run
+//        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//        boolean isFirstRun = preferences.getBoolean(KEY_IS_FIRST_RUN, true);
+//
+//        // Set up a delay if it's the first run
+//        new Handler().postDelayed(() -> {
+//            if(isFirstRun){
+//                startActivity(new Intent(SplashScreenActivity.this, OnboardingStep1Activity.class));
+//                preferences.edit().putBoolean(KEY_IS_FIRST_RUN, false).apply();
+//            } else {
+//                startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
+//            }
+//            finish();
+//        }, 3000);
 
-        // Set up a delay if it's the first run
-        new Handler().postDelayed(() -> {
-            if(isFirstRun){
+
+        // Temp Timer (To show the onboarding process)
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                finish(); // end the life cycle of the SplashActivity by closing the activity
                 startActivity(new Intent(SplashScreenActivity.this, OnboardingStep1Activity.class));
-                preferences.edit().putBoolean(KEY_IS_FIRST_RUN, false).apply();
-            } else {
-                startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
             }
-            finish();
-        }, 3000);
+        };
+
+        Timer opening = new Timer();
+        opening.schedule(task, 3000);
     }
 }
