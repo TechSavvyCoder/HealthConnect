@@ -16,14 +16,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class LoginActivity extends AppCompatActivity {
 
-
     private EditText txtEmail, txtPass;
     private Button btnLogin;
     private MyDatabaseHelper dbHelper;
-
-    // SharedPreferences to keep track of user login state
-    private static final String PREFS_NAME = "OnboardingProcedures";
-    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +40,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = txtPass.getText().toString();
 
                 // Check the credentials against the database
-                if (dbHelper.checkUserCredentials(username, password)) {
-                    // Successful login, update SharedPreferences to reflect the user is logged in
-//                    SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-//                    preferences.edit().putBoolean(KEY_IS_LOGGED_IN, true).apply();
-
+                if (dbHelper.checkUserCredentials(username, password, LoginActivity.this)) {
                     // User exists, proceed to MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
