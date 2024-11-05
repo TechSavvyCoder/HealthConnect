@@ -39,5 +39,8 @@ public class OnboardingStep2Activity extends AppCompatActivity {
                 startActivity(new Intent(OnboardingStep2Activity.this, OnboardingStep3Activity.class));
             }
         });
+
+        // Hide the ActionBar
+        getSupportActionBar().hide();
     }
 }

@@ -22,14 +22,18 @@
     <string name="onboarding3_info2">Login to Connect with your Health Partner</string>
     <string name="onboarding3_login">Login</string>
     <string name="onboarding3_signup">Sign Up</string>
-    <string name="login_title">Sign In</string>
 
-    <string name="login_forgotpassword">Forgot password?</string>
-    <string name="login_donthaveaccount">Don\'t have an account?</string>
-    <string name="login_google">Sign in with Google</string>
-    <string name="login_fb">Sign in with Facebook</string>
-    <string name="registration_policy">I agree to the healthcare Terms of Service and Privacy Policy</string>
-    <string name="registration_haveaccount">Already have an account</string>
+    <!-- Login -->
+    <string name="txt_emailHint">Enter your email</string>
+    <string name="txt_passHint">Enter your password</string>
+
+    <!-- Sign Up -->
+    <string name="txt_usernameHint">Enter your username</string>
+    <string name="txt_confirmPassHint">Enter your password again</string>
+    <string name="txt_userFirstNameHint">Enter your first name</string>
+    <string name="txt_userLastNameHint">Enter your last name</string>
+    <string name="txt_userDateOfBirthHint">Enter your Birthdate</string>
+
 
     <!--Strings for activity_patient_list_item.xml -->
     <string name="patient_name">John Doe</string>

@@ -41,5 +41,8 @@ public class OnboardingStep1Activity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Hide the ActionBar
+        getSupportActionBar().hide();
     }
 }

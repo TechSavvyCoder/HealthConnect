@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".OnboardingStep3Activity">
+    tools:context=".LoginActivity">
 
     <ImageView
         android:id="@+id/img_logo"
@@ -34,74 +34,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
-    <TextView
-        android:id="@+id/tv_onboardingInfo1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="@string/onboarding3_info1"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold"
+    <EditText
+        android:id="@+id/txtEmail"
+        android:layout_width="324dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/txt_primary"
+        android:contentDescription="@string/txt_emailHint"
+        android:drawableLeft="@drawable/vector_email_24"
+        android:drawablePadding="10dp"
+        android:hint="@string/txt_emailHint"
+        android:importantForAccessibility="yes"
+        android:inputType="textEmailAddress"
+        android:paddingStart="25dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_name" />
 
-    <TextView
-        android:id="@+id/tv_onboardingInfo2"
+    <EditText
+        android:id="@+id/txt_passHint"
         android:layout_width="324dp"
-        android:layout_height="66dp"
-        android:layout_marginTop="18dp"
-        android:text="@string/onboarding3_info2"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="24sp"
+        android:layout_height="51dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/txt_primary"
+        android:contentDescription="@string/txt_passHint"
+        android:drawableLeft="@drawable/vector_lock_24"
+        android:drawablePadding="10dp"
+        android:hint="@string/txt_passHint"
+        android:importantForAccessibility="yes"
+        android:inputType="textEmailAddress"
+        android:paddingStart="25dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="10dp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_onboardingInfo1" />
+        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
 
     <Button
         android:id="@+id/onboarding3_login"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="44dp"
         android:backgroundTint="@color/primary_button"
         android:text="@string/onboarding3_login"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_onboardingInfo2" />
-
-    <TextView
-        android:id="@+id/tvSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="@string/onboarding3_signup"
-        android:textColor="@color/secondary_button_font"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/onboarding3_login" />
-
-    <ImageButton
-        android:id="@+id/onboarding3_signup"
-        android:layout_width="324dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/btn_secondaryborder"
-        android:contentDescription="@string/onboarding3_signup"
-        android:focusable="true"
-        android:gravity="center"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/onboarding3_login" />
-
+        app:layout_constraintTop_toBottomOf="@+id/txt_passHint" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

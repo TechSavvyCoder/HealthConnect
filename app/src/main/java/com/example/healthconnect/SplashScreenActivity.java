@@ -47,5 +47,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         Timer opening = new Timer();
         opening.schedule(task, 3000);
+
+        // Hide the ActionBar
+        getSupportActionBar().hide();
     }
 }
