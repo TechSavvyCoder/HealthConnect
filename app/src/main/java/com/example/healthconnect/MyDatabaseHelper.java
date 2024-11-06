@@ -140,4 +140,33 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             return false; // Invalid credentials
         }
     }
+
+    Cursor getAllPatient() {
+        String query = "SELECT * FROM " + USER_TABLE_NAME + " " +
+                "WHERE user_role = 'Patient'";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if(db != null){
+            cursor = db.rawQuery(query, null);
+        }
+        return cursor;
+    }
+
+    public Cursor searchPatient(String searchText) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USER_TABLE_NAME + " " +
+                "WHERE (user_firstName LIKE ? " +
+                "OR user_lastName LIKE ? " +
+                "OR user_email LIKE ? ) " +
+                "AND user_role == ? ";
+        String[] selectionArgs = new String[]{
+                "%" + searchText + "%",
+                "%" + searchText + "%",
+                "%" + searchText + "%",
+                "Patient"
+        };
+        return db.rawQuery(query, selectionArgs);
+    }
+
 }
