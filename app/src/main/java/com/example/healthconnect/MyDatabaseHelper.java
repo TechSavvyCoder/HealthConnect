@@ -28,6 +28,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String USER_COLUMN_FIRSTNAME = "user_firstName";
     private static final String USER_COLUMN_LASTNAME = "user_lastName";
     private static final String USER_COLUMN_DATEOFBIRTH = "date_of_birth";
+    private static final String USER_COLUMN_DOCTORID = "doctor_id";
     private static final String USER_COLUMN_DATECREATED = "date_created";
     private static final String USER_COLUMN_DATEUPDATED = "date_updated";
 
@@ -55,6 +56,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         USER_COLUMN_FIRSTNAME + " TEXT, " +
                         USER_COLUMN_LASTNAME + " TEXT, " +
                         USER_COLUMN_DATEOFBIRTH + " TEXT, " +
+                        USER_COLUMN_DOCTORID + " INTEGER, " +
                         USER_COLUMN_DATECREATED + " TEXT, " +
                         USER_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
@@ -75,10 +77,32 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
+
     }
 
     // Function to add new user
     void addUser(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String date_created){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(USER_COLUMN_USERNAME, user_name);
+        cv.put(USER_COLUMN_USERPASS, user_pass);
+        cv.put(USER_COLUMN_USERROLE, user_role);
+        cv.put(USER_COLUMN_EMAIL, user_email);
+        cv.put(USER_COLUMN_FIRSTNAME, user_firstname);
+        cv.put(USER_COLUMN_LASTNAME, user_lastname);
+        cv.put(USER_COLUMN_DATEOFBIRTH, date_of_birth);
+        cv.put(USER_COLUMN_DATECREATED, date_created);
+
+        long result = db.insert(USER_TABLE_NAME, null, cv);
+        if(result == -1){
+            Toast.makeText(context, "User Registration Failed!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void addPatientPerDoctor(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String doctor_id, String date_created){
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -90,6 +114,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(USER_COLUMN_FIRSTNAME, user_firstname);
         cv.put(USER_COLUMN_LASTNAME, user_lastname);
         cv.put(USER_COLUMN_DATEOFBIRTH, date_of_birth);
+        cv.put(USER_COLUMN_DOCTORID, doctor_id);
         cv.put(USER_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(USER_TABLE_NAME, null, cv);
@@ -141,9 +166,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getAllPatient() {
+    public Cursor getAllPatient(String doctor_ID) {
         String query = "SELECT * FROM " + USER_TABLE_NAME + " " +
-                "WHERE user_role = 'Patient'";
+                "WHERE user_role = 'Patient' AND " + USER_COLUMN_DOCTORID + " = " + doctor_ID;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
 

@@ -2,6 +2,7 @@ package com.example.healthconnect;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.onboarding3_login);
 
         dbHelper = new MyDatabaseHelper(this);  // Initialize MyDatabaseHelper
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,11 +43,22 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Check the credentials against the database
                 if (dbHelper.checkUserCredentials(username, password, LoginActivity.this)) {
-                    // User exists, proceed to MainActivity
-                    Intent intent = new Intent(LoginActivity.this, Doctor_PatientListActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
-                    startActivity(intent);
-                    finish();
+                    // Initialize the session manager
+                    SessionManager sessionManager = new SessionManager(LoginActivity.this);
+                    String loggedInUserRole = sessionManager.getUserRole();
+
+                    // User exists, proceed to Home Activity
+                    if(loggedInUserRole.equals("Doctor")){
+                        Intent intent = new Intent(LoginActivity.this, Doctor_PatientListActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     // User doesn't exist, show a toast
                     Toast.makeText(LoginActivity.this, "User not found or incorrect password!", Toast.LENGTH_SHORT).show();

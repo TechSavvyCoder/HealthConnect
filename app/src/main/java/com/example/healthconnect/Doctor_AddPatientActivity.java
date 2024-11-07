@@ -1,6 +1,7 @@
 package com.example.healthconnect;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,9 @@ import java.util.Locale;
 
 public class Doctor_AddPatientActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
+    String loggedInUserID;
+
     EditText txtUserName, txtUserEmail, txtUserPass, txtUserFirstName, txtUserLastName, txtDateOfBirth;
     Button btnSignUp;
 
@@ -28,39 +32,53 @@ public class Doctor_AddPatientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_add_patient);
 
-        txtUserName = (EditText) findViewById(R.id.txtUserName);
-        txtUserEmail = (EditText) findViewById(R.id.txtEmail);
-        txtUserFirstName = (EditText) findViewById(R.id.txtUserFirstName);
-        txtUserLastName = (EditText) findViewById(R.id.txtUserLastName);
+        // Initialize the session manager
+        sessionManager = new SessionManager(this);
 
-        txtDateOfBirth = findViewById(R.id.txtDateOfBirth);
-        txtDateOfBirth.setOnClickListener(v -> showDatePickerDialog());
+        // Check if there is an active session
+        if (sessionManager.isSessionActive()) {
+            loggedInUserID = sessionManager.getUserId();
 
-        // Get current date and time
-        Date currentDate = new Date();
+            txtUserName = (EditText) findViewById(R.id.txtUserName);
+            txtUserEmail = (EditText) findViewById(R.id.txtEmail);
+            txtUserFirstName = (EditText) findViewById(R.id.txtUserFirstName);
+            txtUserLastName = (EditText) findViewById(R.id.txtUserLastName);
 
-        // Format date as yyyy-MM-dd
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String formattedDate = sdf.format(currentDate);
+            txtDateOfBirth = findViewById(R.id.txtDateOfBirth);
+            txtDateOfBirth.setOnClickListener(v -> showDatePickerDialog());
 
-        btnSignUp = (Button) findViewById(R.id.onboarding3_signup);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MyDatabaseHelper myDB = new MyDatabaseHelper(Doctor_AddPatientActivity.this);
-                myDB.addUser(
-                        txtUserName.getText().toString().trim(),
-                        "123456",
-                        "Patient",
-                        txtUserEmail.getText().toString().trim(),
-                        txtUserFirstName.getText().toString().trim(),
-                        txtUserLastName.getText().toString().trim(),
-                        txtDateOfBirth.getText().toString().trim(),
-                        formattedDate
-                );
-                Toast.makeText(Doctor_AddPatientActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
-            }
-        });
+            // Get current date and time
+            Date currentDate = new Date();
+
+            // Format date as yyyy-MM-dd
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            String formattedDate = sdf.format(currentDate);
+
+            btnSignUp = (Button) findViewById(R.id.onboarding3_signup);
+            btnSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MyDatabaseHelper myDB = new MyDatabaseHelper(Doctor_AddPatientActivity.this);
+                    myDB.addPatientPerDoctor(
+                            txtUserName.getText().toString().trim(),
+                            "123456",
+                            "Patient",
+                            txtUserEmail.getText().toString().trim(),
+                            txtUserFirstName.getText().toString().trim(),
+                            txtUserLastName.getText().toString().trim(),
+                            txtDateOfBirth.getText().toString().trim(),
+                            loggedInUserID, // Doctor's userID
+                            formattedDate
+                    );
+                    Toast.makeText(Doctor_AddPatientActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // Redirect to LoginActivity if no session is active
+            Intent loginIntent = new Intent(Doctor_AddPatientActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }
     }
 
     private void showDatePickerDialog() {

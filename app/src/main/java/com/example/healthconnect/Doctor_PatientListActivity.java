@@ -21,6 +21,9 @@ import java.util.ArrayList;
 
 public class Doctor_PatientListActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
+    String loggedInUserID;
+
     RecyclerView rvPatientList;
     FloatingActionButton btnAdd;
 
@@ -38,44 +41,57 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         // Hide the ActionBar
         getSupportActionBar().hide();
 
-        searchPatient = findViewById(R.id.searchView);
-        searchPatient.clearFocus();
-        searchPatient.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+        // Initialize the session manager
+        sessionManager = new SessionManager(this);
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterList(newText);
-                return false;
-            }
-        });
+        // Check if there is an active session
+        if (sessionManager.isSessionActive()) {
+            loggedInUserID = sessionManager.getUserId();
 
-        rvPatientList = (RecyclerView) findViewById(R.id.rvPatientList);
-        btnAdd = (FloatingActionButton) findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Doctor_PatientListActivity.this, Doctor_AddPatientActivity.class);
-                startActivity(intent);
-            }
-        });
+            searchPatient = findViewById(R.id.searchView);
+            searchPatient.clearFocus();
+            searchPatient.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-        myDB = new MyDatabaseHelper(Doctor_PatientListActivity.this);
-        user_id = new ArrayList<>();
-        user_name = new ArrayList<>();
-        user_email = new ArrayList<>();
-        user_firstName = new ArrayList<>();
-        user_lastName = new ArrayList<>();
-        user_DOB = new ArrayList<>();
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    filterList(newText);
+                    return false;
+                }
+            });
 
-        storeDataInArray();
+            rvPatientList = (RecyclerView) findViewById(R.id.rvPatientList);
+            btnAdd = (FloatingActionButton) findViewById(R.id.btnAdd);
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Doctor_PatientListActivity.this, Doctor_AddPatientActivity.class);
+                    startActivity(intent);
+                }
+            });
 
-        patientAdapter = new PatientAdapter(Doctor_PatientListActivity.this, user_id, user_firstName, user_lastName, user_email);
-        rvPatientList.setAdapter(patientAdapter);
-        rvPatientList.setLayoutManager(new LinearLayoutManager(Doctor_PatientListActivity.this));
+            myDB = new MyDatabaseHelper(Doctor_PatientListActivity.this);
+            user_id = new ArrayList<>();
+            user_name = new ArrayList<>();
+            user_email = new ArrayList<>();
+            user_firstName = new ArrayList<>();
+            user_lastName = new ArrayList<>();
+            user_DOB = new ArrayList<>();
+
+            storeDataInArray(loggedInUserID);
+
+            patientAdapter = new PatientAdapter(Doctor_PatientListActivity.this, user_id, user_firstName, user_lastName, user_email);
+            rvPatientList.setAdapter(patientAdapter);
+            rvPatientList.setLayoutManager(new LinearLayoutManager(Doctor_PatientListActivity.this));
+        } else {
+            // Redirect to LoginActivity if no session is active
+            Intent loginIntent = new Intent(Doctor_PatientListActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
+        }
     }
 
     private void filterList(String newText) {
@@ -106,10 +122,10 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         patientAdapter.notifyDataSetChanged();
     }
 
-    void storeDataInArray() {
-        Cursor cursor = myDB.getAllPatient();
+    void storeDataInArray(String loggedInUserID) {
+        Cursor cursor = myDB.getAllPatient(loggedInUserID);
         if(cursor.getCount() == 0){
-            Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show();
+            // empty list
         } else {
             while(cursor.moveToNext()){
                 user_id.add(cursor.getString(0));
