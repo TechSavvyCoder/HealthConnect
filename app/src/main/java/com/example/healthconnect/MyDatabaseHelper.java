@@ -141,16 +141,62 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    Cursor getAllPatient() {
+    public Cursor getAllPatient() {
         String query = "SELECT * FROM " + USER_TABLE_NAME + " " +
                 "WHERE user_role = 'Patient'";
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = null;
+
         if(db != null){
             cursor = db.rawQuery(query, null);
         }
         return cursor;
+    }
+
+    public String getUserNameById(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                USER_TABLE_NAME,                                                // Table name
+                new String[]{USER_COLUMN_USERNAME},                             // null means all columns (SELECT *)
+                USER_COLUMN_USERROLE + " = ? AND " + USER_COLUMN_ID + " = ?",   // WHERE clause with both filters
+                new String[]{"Patient", userId},                // Values for the placeholders in the WHERE clause
+                null,   // No GROUP BY
+                null,   // No HAVING
+                null    // No ORDER BY
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int int_userName = cursor.getColumnIndex(USER_COLUMN_USERNAME);
+            String username = cursor.getString(int_userName);
+
+            cursor.close();
+            return username;
+        } else {
+            return null;
+        }
+    }
+
+    public String getUserInfo(String userId, String tableName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                USER_TABLE_NAME,
+                new String[]{tableName},
+                USER_COLUMN_USERROLE + " = ? AND " + USER_COLUMN_ID + " = ?",
+                new String[]{"Patient", userId},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int col_index = cursor.getColumnIndex(tableName);
+            String col_value = cursor.getString(col_index);
+
+            cursor.close();
+            return col_value;
+        } else {
+            return null;
+        }
     }
 
     public Cursor searchPatient(String searchText) {

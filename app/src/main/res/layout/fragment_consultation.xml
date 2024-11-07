@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ConsultationFragment">
+
+    <!-- Content for Consultations (you can replace this with your real content) -->
+    <TextView
+        android:id="@+id/consultations_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Consultations"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Here are the details of consultations."
+        android:textSize="16sp" />
+
+</LinearLayout>

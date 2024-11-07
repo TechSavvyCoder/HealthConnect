@@ -43,8 +43,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (dbHelper.checkUserCredentials(username, password, LoginActivity.this)) {
                     // User exists, proceed to MainActivity
                     Intent intent = new Intent(LoginActivity.this, Doctor_PatientListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
                     startActivity(intent);
-                    finish();  // Optional: Close the LoginActivity
+                    finish();
                 } else {
                     // User doesn't exist, show a toast
                     Toast.makeText(LoginActivity.this, "User not found or incorrect password!", Toast.LENGTH_SHORT).show();

@@ -40,8 +40,11 @@
     <string name="txtPatient_passHint">Enter password</string>
     <string name="txtPatient_userFirstNameHint">Enter first name</string>
     <string name="txtPatient_userLastNameHint">Enter last name</string>
-    <string name="txtPatient_userDateOfBirthHint">Enter Birthdate</string>
+    <string name="txtPatient_userDateOfBirthHint">Enter birthdate</string>
     <string name="btnAddPatient">Submit</string>
 
-
+    <!-- Profile -->
+    <string name="txtDescription">Description</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
