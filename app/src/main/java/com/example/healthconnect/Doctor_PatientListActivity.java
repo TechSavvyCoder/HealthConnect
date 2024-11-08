@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,10 +23,10 @@ import java.util.ArrayList;
 public class Doctor_PatientListActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
-    String loggedInUserID;
+    String loggedInUserID, loggedInUserName;
 
     RecyclerView rvPatientList;
-    FloatingActionButton btnAdd;
+    FloatingActionButton btnAdd, btnSignOut;
 
     MyDatabaseHelper myDB;
     ArrayList<String> user_id, user_name, user_email, user_firstName, user_lastName, user_DOB;
@@ -47,6 +48,10 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         // Check if there is an active session
         if (sessionManager.isSessionActive()) {
             loggedInUserID = sessionManager.getUserId();
+            loggedInUserName = sessionManager.getUserFirstName() + " " + sessionManager.getUserLastName();
+
+            TextView tvLoggedUser= findViewById(R.id.tvLoggedUser);
+            tvLoggedUser.setText("Hi, " + loggedInUserName + "!");
 
             searchPatient = findViewById(R.id.searchView);
             searchPatient.clearFocus();
@@ -64,6 +69,8 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
             });
 
             rvPatientList = (RecyclerView) findViewById(R.id.rvPatientList);
+            signOut();
+
             btnAdd = (FloatingActionButton) findViewById(R.id.btnAdd);
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,7 +129,7 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         patientAdapter.notifyDataSetChanged();
     }
 
-    void storeDataInArray(String loggedInUserID) {
+    public void storeDataInArray(String loggedInUserID) {
         Cursor cursor = myDB.getAllPatient(loggedInUserID);
         if(cursor.getCount() == 0){
             // empty list
@@ -136,5 +143,22 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
                 user_DOB.add(cursor.getString(7));
             }
         }
+    }
+
+    public void signOut() {
+        btnSignOut = (FloatingActionButton) findViewById(R.id.btnSignOut);
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Clear the current user session
+                sessionManager.clearSession();
+
+                // Redirect to LoginActivity
+                Intent intent = new Intent(Doctor_PatientListActivity.this, OnboardingStep3Activity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // Clear activity stack
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

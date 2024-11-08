@@ -34,6 +34,9 @@
     <string name="txt_userLastNameHint">Enter your last name</string>
     <string name="txt_userDateOfBirthHint">Enter your Birthdate</string>
 
+    <!-- Home Doctor -->
+    <string name="txtSearchHint">Search Patient here..</string>
+
     <!-- Add new patient -->
     <string name="txtPatient_usernameHint">Enter username</string>
     <string name="txtPatient_emailHint">Enter email</string>
@@ -45,6 +48,5 @@
 
     <!-- Profile -->
     <string name="txtDescription">Description</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
