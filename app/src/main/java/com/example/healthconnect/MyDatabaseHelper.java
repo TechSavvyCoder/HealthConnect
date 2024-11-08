@@ -143,7 +143,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void addPatientPerDoctor(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String doctor_id, String date_created){
+    public String addPatientPerDoctor(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String doctor_id, String date_created){
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -159,6 +159,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(USER_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(USER_TABLE_NAME, null, cv);
+
+        if (result != -1) {
+            return "success";
+        } else {
+            return "failed";
+        }
     }
 
     void addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created){

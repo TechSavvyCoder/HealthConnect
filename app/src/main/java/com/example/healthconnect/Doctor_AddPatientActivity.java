@@ -59,7 +59,7 @@ public class Doctor_AddPatientActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     MyDatabaseHelper myDB = new MyDatabaseHelper(Doctor_AddPatientActivity.this);
-                    myDB.addPatientPerDoctor(
+                    String result = myDB.addPatientPerDoctor(
                             txtUserName.getText().toString().trim(),
                             "123456",
                             "Patient",
@@ -70,7 +70,20 @@ public class Doctor_AddPatientActivity extends AppCompatActivity {
                             loggedInUserID, // Doctor's userID
                             formattedDate
                     );
-                    Toast.makeText(Doctor_AddPatientActivity.this, "Successfully Registered!", Toast.LENGTH_SHORT).show();
+                    if ("success".equals(result)) {
+                        // User added successfully
+                        Toast.makeText(Doctor_AddPatientActivity.this, "Patient added successfully!", Toast.LENGTH_SHORT).show();
+
+                        // Clear the input fields
+                        txtUserName.setText("");
+                        txtUserEmail.setText("");
+                        txtUserFirstName.setText("");
+                        txtUserLastName.setText("");
+                        txtDateOfBirth.setText("");
+                    } else {
+                        // User addition failed
+                        Toast.makeText(Doctor_AddPatientActivity.this, "Failed to add user. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         } else {
