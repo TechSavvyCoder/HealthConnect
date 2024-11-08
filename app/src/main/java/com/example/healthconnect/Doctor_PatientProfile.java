@@ -203,10 +203,13 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                     String formattedDate = sdf.format(currentDate);
 
                     Toast.makeText(Doctor_PatientProfile.this,
-                            "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText + " " + appointmentDescText,
+                            "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText,
                             Toast.LENGTH_SHORT).show();
 
                     db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
+
+                    AppointmentFragment appointmentFragment = new AppointmentFragment();
+                    loadFragment(appointmentFragment);
                 })
                 .setNegativeButton("Cancel", null)
                 .create()

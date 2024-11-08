@@ -51,7 +51,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (txtUserPass.getText().toString().equals(txtUserConfirmPass.getText().toString())) {
                     MyDatabaseHelper myDB = new MyDatabaseHelper(SignUpActivity.this);
-                    myDB.addUser(
+                    String result = myDB.addUser(
                             txtUserName.getText().toString().trim(),
                             txtUserPass.getText().toString().trim(),
                             "Doctor",
@@ -61,6 +61,23 @@ public class SignUpActivity extends AppCompatActivity {
                             txtDateOfBirth.getText().toString().trim(),
                             formattedDate
                     );
+
+                    if ("success".equals(result)) {
+                        // User added successfully
+                        Toast.makeText(SignUpActivity.this, "User added successfully!", Toast.LENGTH_SHORT).show();
+
+                        // Clear the input fields
+                        txtUserName.setText("");
+                        txtUserPass.setText("");
+                        txtUserConfirmPass.setText("");
+                        txtUserEmail.setText("");
+                        txtUserFirstName.setText("");
+                        txtUserLastName.setText("");
+                        txtDateOfBirth.setText("");
+                    } else {
+                        // User addition failed
+                        Toast.makeText(SignUpActivity.this, "Failed to add user. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 }

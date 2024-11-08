@@ -10,18 +10,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Appointment Date and Time"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvAppStatusValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status" />
+        android:text="Status: "
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvAppDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description" />
+        android:text="Description"
+        android:textSize="16sp" />
 
 </LinearLayout>

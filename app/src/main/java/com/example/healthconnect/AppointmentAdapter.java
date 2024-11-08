@@ -8,7 +8,10 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.AppointmentViewHolder> {
 
@@ -35,9 +38,22 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
     @Override
     public void onBindViewHolder(AppointmentViewHolder holder, int position) {
-        holder.tv_appDateTime.setText(app_datetime.get(position));
-        holder.tv_appStatusValue.setText(app_status.get(position));
-        holder.tv_appDesc.setText(app_desc.get(position));
+        String inputDateString = app_datetime.get(position);
+        String outputDateString;
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+            Date date = inputFormat.parse(inputDateString);
+
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy 'at' h:mm a", Locale.getDefault());
+            outputDateString = outputFormat.format(date);
+
+            holder.tv_appDateTime.setText(outputDateString);
+            holder.tv_appStatusValue.setText("Status: " + app_status.get(position));
+            holder.tv_appDesc.setText(app_desc.get(position));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

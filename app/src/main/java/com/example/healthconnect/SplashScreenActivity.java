@@ -12,6 +12,7 @@ import java.util.TimerTask;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    MyDatabaseHelper dbHelper;
     private static final String PREFS_NAME = "OnboardingProcedures";
     private static final String KEY_IS_FIRST_RUN = "isFirstRun";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
@@ -27,6 +28,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         // Check if it's the first run
         boolean isFirstRun = preferences.getBoolean(KEY_IS_FIRST_RUN, true);
         boolean isLoggedIn = preferences.getBoolean(KEY_IS_LOGGED_IN, false); // Check if the user is logged in
+
+        // Initialize the database helper
+        dbHelper = new MyDatabaseHelper(this);
+        // resetDatabase();
 
         // Set up a delay before transitioning to the next activity
 //        new Handler().postDelayed(() -> {
@@ -63,5 +68,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Hide the ActionBar
         getSupportActionBar().hide();
+    }
+
+    private void resetDatabase() {
+        dbHelper.resetDatabase();
     }
 }

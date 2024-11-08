@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
+
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
@@ -105,8 +107,21 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Function to add new user
-    void addUser(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String date_created){
+    // Method to delete the database and recreate the tables
+    public void resetDatabase() {
+        // Recreate the database and tables
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
+
+        onCreate(db);
+        db.close();
+    }
+
+    // Function to CREATE new entry
+    public String addUser(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String date_created){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -120,6 +135,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(USER_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(USER_TABLE_NAME, null, cv);
+
+        if (result != -1) {
+            return "success";
+        } else {
+            return "failed";
+        }
     }
 
     void addPatientPerDoctor(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String doctor_id, String date_created){
@@ -140,7 +161,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert(USER_TABLE_NAME, null, cv);
     }
 
-    // Function to add new appointment
     void addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -196,6 +216,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // Function to RETRIEVE entries
     public Cursor getAllPatient(String doctor_ID) {
         String query = "SELECT * FROM " + USER_TABLE_NAME + " " +
                 "WHERE user_role = 'Patient' AND " + USER_COLUMN_DOCTORID + " = " + doctor_ID;
@@ -207,7 +228,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }
-
 
     public Cursor getAllAppointments(String doctor_ID) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -222,7 +242,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
-
 
     public String getUserNameById(String userId) {
         SQLiteDatabase db = this.getReadableDatabase();
