@@ -53,6 +53,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String APPOINTMENT_COLUMN_DATECREATED = "date_created";
     private static final String APPOINTMENT_COLUMN_DATEUPDATED = "date_updated";
 
+    // Consultation Table
+    private static final String CONSULTATION_TABLE = "consultation";
+    private static final String CONSULTATION_COLUMN_ID = "consultation_id";
+    private static final String CONSULTATION_COLUMN_APPOINTMENTID = "appointment_id";
+    private static final String CONSULTATION_COLUMN_DIAGNOSIS = "consultation_diagnosis";
+    private static final String CONSULTATION_COLUMN_TREATMENT = "consultation_treatment";
+    private static final String CONSULTATION_COLUMN_DESC = "consultation_desc";
+    private static final String CONSULTATION_COLUMN_DATECREATED = "date_created";
+    private static final String CONSULTATION_COLUMN_DATEUPDATED = "date_updated";
+
     public MyDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -97,6 +107,18 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         APPOINTMENT_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
         db.execSQL(query_appointment);
+
+        String query_consultation =
+                "CREATE TABLE " + CONSULTATION_TABLE + " ( " +
+                        CONSULTATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        CONSULTATION_COLUMN_APPOINTMENTID + " TEXT NOT NULL, " +
+                        CONSULTATION_COLUMN_DIAGNOSIS + " TEXT, " +
+                        CONSULTATION_COLUMN_TREATMENT + " TEXT, " +
+                        CONSULTATION_COLUMN_DESC + " TEXT, " +
+                        CONSULTATION_COLUMN_DATECREATED + " TEXT, " +
+                        CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_consultation);
     }
 
     @Override
@@ -104,6 +126,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
         onCreate(db);
     }
 
@@ -118,6 +141,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         onCreate(db);
         db.close();
+    }
+
+    public void makeThisTable() {
+        // Recreate the database and tables
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query_consultation =
+                "CREATE TABLE " + CONSULTATION_TABLE + " ( " +
+                        CONSULTATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        CONSULTATION_COLUMN_APPOINTMENTID + " TEXT NOT NULL, " +
+                        CONSULTATION_COLUMN_DIAGNOSIS + " TEXT, " +
+                        CONSULTATION_COLUMN_TREATMENT + " TEXT, " +
+                        CONSULTATION_COLUMN_DESC + " TEXT, " +
+                        CONSULTATION_COLUMN_DATECREATED + " TEXT, " +
+                        CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_consultation);
     }
 
     // Function to CREATE new entry
@@ -245,6 +285,29 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
+            cursor = db.rawQuery(query, new String[]{curr_Patient_ID, doctor_ID});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
+    public Cursor getAllConsultations(String doctor_ID, String curr_Patient_ID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // SQL query to join appointments and consultations and filter by patient_id
+        String query = "SELECT * " +
+                "FROM " + CONSULTATION_TABLE + " c " +
+                "INNER JOIN " + APPOINTMENT_TABLE + " a ON c." + CONSULTATION_COLUMN_APPOINTMENTID + " = a." + APPOINTMENT_COLUMN_ID + " " +
+                "WHERE a." + APPOINTMENT_COLUMN_PATIENTID + " = ? " +
+                "AND a." + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                "ORDER BY a." + APPOINTMENT_COLUMN_DATETIME + " ASC";
+
+        Cursor cursor = null;
+
+        try {
+            // Execute the query with the patientID parameter
             cursor = db.rawQuery(query, new String[]{curr_Patient_ID, doctor_ID});
         } catch (Exception e) {
             e.printStackTrace();
