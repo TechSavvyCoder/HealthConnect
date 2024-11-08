@@ -40,6 +40,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String PATIENT_COLUMN_DATECREATED = "date_created";
     private static final String PATIENT_COLUMN_DATEUPDATED = "date_updated";
 
+    // Appointment Table
+    private static final String APPOINTMENT_TABLE = "appointment";
+    private static final String APPOINTMENT_COLUMN_ID = "appointment_id";
+    private static final String APPOINTMENT_COLUMN_PATIENTID = "patient_id";
+    private static final String APPOINTMENT_COLUMN_DOCTORID = "doctor_id";
+    private static final String APPOINTMENT_COLUMN_DATETIME = "appointment_dateTime";
+    private static final String APPOINTMENT_COLUMN_STATUS = "appointment_status";
+    private static final String APPOINTMENT_COLUMN_DESC = "appointment_desc";
+    private static final String APPOINTMENT_COLUMN_DATECREATED = "date_created";
+    private static final String APPOINTMENT_COLUMN_DATEUPDATED = "date_updated";
+
     public MyDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -64,20 +75,34 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         String query_patient =
                 "CREATE TABLE " + PATIENT_TABLE + " ( " +
-                        PATIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        APPOINTMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         PATIENT_COLUMN_USERID + " TEXT NOT NULL, " +
                         PATIENT_COLUMN_MEDICALHISTORY + " TEXT NOT NULL, " +
                         PATIENT_COLUMN_DATECREATED + " TEXT, " +
                         PATIENT_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
         db.execSQL(query_patient);
+
+        String query_appointment =
+                "CREATE TABLE " + APPOINTMENT_TABLE + " ( " +
+                        APPOINTMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        APPOINTMENT_COLUMN_PATIENTID + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DOCTORID + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DATETIME + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DESC + " TEXT, " +
+                        APPOINTMENT_COLUMN_STATUS + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DATECREATED + " TEXT, " +
+                        APPOINTMENT_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_appointment);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
-
+        db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
+        onCreate(db);
     }
 
     // Function to add new user
@@ -95,11 +120,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(USER_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(USER_TABLE_NAME, null, cv);
-        if(result == -1){
-            Toast.makeText(context, "User Registration Failed!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     void addPatientPerDoctor(String user_name, String user_pass, String user_role, String user_email, String user_firstname, String user_lastname, String date_of_birth, String doctor_id, String date_created){
@@ -118,11 +138,21 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(USER_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(USER_TABLE_NAME, null, cv);
-        if(result == -1){
-            Toast.makeText(context, "User Registration Failed!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_SHORT).show();
-        }
+    }
+
+    // Function to add new appointment
+    void addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(APPOINTMENT_COLUMN_PATIENTID, patient_id);
+        cv.put(APPOINTMENT_COLUMN_DOCTORID, doctor_id);
+        cv.put(APPOINTMENT_COLUMN_DATETIME, app_datetime);
+        cv.put(APPOINTMENT_COLUMN_DESC, app_desc);
+        cv.put(APPOINTMENT_COLUMN_STATUS, app_status);
+        cv.put(APPOINTMENT_COLUMN_DATECREATED, date_created);
+
+        long result = db.insert(APPOINTMENT_TABLE, null, cv);
     }
 
     // Function to check user credentials
@@ -177,6 +207,22 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
+
+    public Cursor getAllAppointments(String doctor_ID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + APPOINTMENT_TABLE + " WHERE doctor_id = ?";
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(query, new String[]{doctor_ID});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
 
     public String getUserNameById(String userId) {
         SQLiteDatabase db = this.getReadableDatabase();

@@ -106,7 +106,7 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         // Query the database for matching patients
         Cursor cursor = myDB.searchPatient(newText);
         if(cursor.getCount() == 0){
-            Toast.makeText(this, "No matching patients found", Toast.LENGTH_SHORT).show();
+            // No matching patient found
         } else {
             while(cursor.moveToNext()){
                 user_id.add(cursor.getString(0));
