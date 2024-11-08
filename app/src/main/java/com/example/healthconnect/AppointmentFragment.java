@@ -26,6 +26,9 @@ public class AppointmentFragment extends Fragment {
     ArrayList<String> app_id, patient_id, doctor_id, app_datetime, app_desc, app_status;
     TextView noAppointmentsMessage;
 
+    // Variables to store patient info
+    String patient_id_from_bundle;
+
     public AppointmentFragment() {
         // Required empty public constructor
     }
@@ -49,7 +52,12 @@ public class AppointmentFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rvAppointmentList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        storeDataInArray(loggedDoctorID);
+        // Retrieve patient info from the arguments
+        if (getArguments() != null) {
+            patient_id_from_bundle = getArguments().getString("patient_id");
+        }
+
+        storeDataInArray(loggedDoctorID, patient_id_from_bundle);
 
         appointmentAdapter = new AppointmentAdapter(getContext(), app_id, patient_id, doctor_id, app_datetime, app_desc, app_status);
         recyclerView.setAdapter(appointmentAdapter);
@@ -57,8 +65,8 @@ public class AppointmentFragment extends Fragment {
         return view;
     }
 
-    void storeDataInArray(String loggedDoctorID) {
-        Cursor cursor = myDB.getAllAppointments(loggedDoctorID);
+    void storeDataInArray(String loggedDoctorID, String currPatientID) {
+        Cursor cursor = myDB.getAllAppointments(loggedDoctorID, currPatientID);
         if(cursor.getCount() == 0){
             noAppointmentsMessage.setVisibility(View.VISIBLE);
         } else {

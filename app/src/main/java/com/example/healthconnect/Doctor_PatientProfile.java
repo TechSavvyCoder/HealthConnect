@@ -122,6 +122,12 @@ public class Doctor_PatientProfile extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment) {
+        // Prepare the bundle to send data to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString("patient_id", intent_user_id);
+
+        fragment.setArguments(bundle);  // Attach the bundle to the fragment
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);  // Optional: Add to back stack for fragment back navigation

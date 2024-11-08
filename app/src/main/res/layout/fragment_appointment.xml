@@ -9,9 +9,11 @@
         android:id="@+id/noAppointmentsMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:text="No appointments found"
-        android:visibility="gone"
-        android:layout_gravity="center"/>
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAppointmentList"

@@ -77,7 +77,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         String query_patient =
                 "CREATE TABLE " + PATIENT_TABLE + " ( " +
-                        APPOINTMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        PATIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         PATIENT_COLUMN_USERID + " TEXT NOT NULL, " +
                         PATIENT_COLUMN_MEDICALHISTORY + " TEXT NOT NULL, " +
                         PATIENT_COLUMN_DATECREATED + " TEXT, " +
@@ -235,13 +235,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getAllAppointments(String doctor_ID) {
+    public Cursor getAllAppointments(String doctor_ID, String curr_Patient_ID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + APPOINTMENT_TABLE + " WHERE doctor_id = ?";
+        String query = "SELECT * FROM " + APPOINTMENT_TABLE +
+                " WHERE " + APPOINTMENT_COLUMN_PATIENTID + " = ? " +
+                " AND " + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                " ORDER BY " + APPOINTMENT_COLUMN_DATETIME + " ASC";
+
         Cursor cursor = null;
 
         try {
-            cursor = db.rawQuery(query, new String[]{doctor_ID});
+            cursor = db.rawQuery(query, new String[]{curr_Patient_ID, doctor_ID});
         } catch (Exception e) {
             e.printStackTrace();
         }
