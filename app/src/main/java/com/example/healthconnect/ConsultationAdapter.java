@@ -32,7 +32,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
         this.con_diagnosis = con_diagnosis;
         this.con_treatment = con_treatment;
         this.con_desc = con_desc;
-        this.myDB = new MyDatabaseHelper(context);  // Initialize database helper here
+        this.myDB = new MyDatabaseHelper(context);
     }
 
     @NonNull
@@ -46,9 +46,6 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
     public void onBindViewHolder(@NonNull ConsultationAdapter.ConsultationViewHolder holder, int position) {
         MyDatabaseHelper db = new MyDatabaseHelper(context);
         String app_dateTime = db.getAppointmentInfoByID(con_datetime.get(position), "appointment_dateTime");
-
-        Log.d("ConsultationAdapter", "Binding data for position: " + position);
-        Log.d("ConsultationAdapter", "Data - Type: " + con_type.get(position));
 
         String outputDateString;
 
@@ -67,7 +64,6 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
 
             // Set OnClickListener for the Delete button
             holder.btnDelete.setOnClickListener(v -> showDeleteConfirmationDialog(position, outputDateString, con_desc.get(position)));
-
         } catch (Exception e) {
             e.printStackTrace();
         }

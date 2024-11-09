@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
     Context context;
     ArrayList<String> med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc;
+    MyDatabaseHelper myDB;
 
     public MedicationAdapter(Context context, ArrayList<String> con_id, ArrayList<String> med_dateConsulted, ArrayList<String> med_dosage,
                              ArrayList<String> med_frequency, ArrayList<String> med_duration, ArrayList<String> med_desc) {
@@ -29,6 +32,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         this.med_frequency = med_frequency;
         this.med_duration = med_duration;
         this.med_desc = med_desc;
+        this.myDB = new MyDatabaseHelper(context);
     }
 
     @NonNull
@@ -43,10 +47,6 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         MyDatabaseHelper db = new MyDatabaseHelper(context);
         String get_colFromConsultation = db.getConsultationInfoByID(med_dateConsulted.get(position), "appointment_id");
         String con_dateTime = db.getAppointmentInfoByID(get_colFromConsultation, "appointment_dateTime");
-
-        Log.d("MedicationAdapter", "Binding data at position: " + position);
-        Log.d("MedicationAdapter", "Val from med table: " + med_dateConsulted.get(position));
-        Log.d("MedicationAdapter", "Retrieved Consul Date: " + con_dateTime);
 
         String outputDateString;
 
@@ -63,6 +63,8 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             holder.tvMedDuration.setText("Duration" + med_duration.get(position));
             holder.tvMedDesc.setText(med_desc.get(position));
 
+            // Set OnClickListener for the Delete button
+            holder.btnDelete.setOnClickListener(v -> showDeleteConfirmationDialog(position, outputDateString, med_desc.get(position)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,7 +77,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
     public static class MedicationViewHolder extends RecyclerView.ViewHolder {
         TextView tvMedDateConsulted, tvMedDesc, tvMedDosage, tvMedFrequency, tvMedDuration;
-
+        Button btnDelete;
 
         public MedicationViewHolder(View itemView) {
             super(itemView);
@@ -84,6 +86,46 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             tvMedFrequency = itemView.findViewById(R.id.tvMedFrequency);
             tvMedDuration = itemView.findViewById(R.id.tvMedDuration);
             tvMedDesc = itemView.findViewById(R.id.tvMedDesc);
+
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+        }
+    }
+
+    // Show confirmation dialog before deletion
+    private void showDeleteConfirmationDialog(int position, String med_date, String med_desc) {
+        new android.app.AlertDialog.Builder(context)
+                .setTitle("Delete entry?")
+                .setMessage("This will delete your medication consulted on " + med_date + "\n\nDescription: " + med_desc)
+                .setCancelable(false)
+                .setPositiveButton("Yes, delete", (dialog, id) -> {
+                    deleteAppointment(position);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // Method to delete the appointment from the database
+    private void deleteAppointment(int position) {
+        // Get the appointment ID from the data
+        String medicationId = med_id.get(position);
+
+        // Delete the appointment from the database
+        boolean isDeleted = myDB.deleteEntry("medication", "medication_id", medicationId);
+
+        if (isDeleted) {
+            // Remove the item from the list and notify the adapter
+            med_id.remove(position);
+            med_dateConsulted.remove(position);
+            med_dosage.remove(position);
+            med_frequency.remove(position);
+            med_duration.remove(position);
+            med_desc.remove(position);
+            notifyItemRemoved(position);
+
+            // Optionally, you can show a toast message
+            Toast.makeText(context, "Entry has been deleted successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Failed to delete this entry", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -31,7 +31,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         this.app_datetime = app_datetime;
         this.app_desc = app_desc;
         this.app_status = app_status;
-        this.myDB = new MyDatabaseHelper(context);  // Initialize database helper here
+        this.myDB = new MyDatabaseHelper(context);
     }
 
     @Override

@@ -59,13 +59,6 @@ public class MedicationFragment extends Fragment {
 
         storeDataInArray(loggedDoctorID, patient_id_from_bundle);
 
-        Log.d("MedicationFragment", "med_id: " + med_id);
-        Log.d("MedicationFragment", "med_dateConsulted: " + med_dateConsulted);
-        Log.d("MedicationFragment", "med_desc: " + med_desc);
-        Log.d("MedicationFragment", "med_dosage: " + med_dosage);
-        Log.d("MedicationFragment", "med_frequency: " + med_frequency);
-        Log.d("MedicationFragment", "med_duration: " + med_duration);
-
         medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc);
         recyclerView.setAdapter(medicationAdapter);
 
