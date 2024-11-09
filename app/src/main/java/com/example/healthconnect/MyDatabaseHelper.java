@@ -582,4 +582,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(query, selectionArgs);
     }
 
+
+    // Function to DELETE entries
+    public boolean deleteEntry(String table_name, String col_name, String col_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(table_name, col_name + " = ?", new String[]{col_id});
+        return rowsDeleted > 0;
+    }
+
 }
