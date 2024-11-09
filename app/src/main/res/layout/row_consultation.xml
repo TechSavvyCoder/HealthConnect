@@ -14,10 +14,24 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tvConStatusValue"
+        android:id="@+id/tvConType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status: "
+        android:text="Type: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvConDiagnosis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Diagnosis: "
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvConTreatment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Treatment: "
         android:textSize="16sp" />
 
     <TextView

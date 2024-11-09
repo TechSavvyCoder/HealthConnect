@@ -32,6 +32,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         // Initialize the database helper
         dbHelper = new MyDatabaseHelper(this);
         // resetDatabase();
+        // dbHelper.makeThisTable();
 
         // Set up a delay before transitioning to the next activity
 //        new Handler().postDelayed(() -> {

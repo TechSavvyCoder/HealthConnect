@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +22,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class Doctor_PatientProfile extends AppCompatActivity {
@@ -36,6 +41,9 @@ public class Doctor_PatientProfile extends AppCompatActivity {
 
     private TabLayout tabLayout;
     FloatingActionButton btnAdd;
+
+    String selectedDate;
+    String selectedAppointmentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +151,7 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                 .setItems(options, (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            Toast.makeText(Doctor_PatientProfile.this, "Add new consultation clicked", Toast.LENGTH_SHORT).show();
+                            showAddConsultationDialog();
                             break;
                         case 1:
                             Toast.makeText(Doctor_PatientProfile.this, "Add new medication clicked", Toast.LENGTH_SHORT).show();
@@ -216,6 +224,130 @@ public class Doctor_PatientProfile extends AppCompatActivity {
 
                     AppointmentFragment appointmentFragment = new AppointmentFragment();
                     loadFragment(appointmentFragment);
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    private void showAddConsultationDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.doctor_add_patient_consultation, null);
+
+        // Get the spinner for appointment selection
+        Spinner spinnerAppointment = dialogView.findViewById(R.id.spinnerAppointment);
+
+        // Retrieve the appointments from the database
+        db = new MyDatabaseHelper(Doctor_PatientProfile.this);
+        ArrayList<HashMap<String, String>> appointments = db.getAppointmentsForPatient(loggedInUserID, intent_user_id);
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy 'at' h:mm a", Locale.getDefault());
+
+        ArrayList<String> new_appointments = new ArrayList<>();
+        final HashMap<String, String> appointmentMap = new HashMap<>();
+
+        for (HashMap<String, String> appointment : appointments) {
+            String dateTime = appointment.get("dateTime");
+            String id = appointment.get("id");
+            try {
+                // Parse the appointment string to a Date object
+                Date date = inputFormat.parse(dateTime);
+                // Format the Date object to the desired format
+                if (date != null) {
+                    String formattedDate = outputFormat.format(date);
+                    new_appointments.add(formattedDate);
+                    appointmentMap.put(formattedDate, id); // Associate formatted date with ID
+                } else {
+                    new_appointments.add("No appointment");
+                    appointmentMap.put("No appointment", id);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Create an ArrayAdapter to populate the spinner with appointments
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Doctor_PatientProfile.this,
+                android.R.layout.simple_spinner_dropdown_item, new_appointments);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAppointment.setAdapter(adapter);
+
+        // Get the selected ID when an item is selected
+        spinnerAppointment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedDate = (String) parent.getItemAtPosition(position);
+                selectedAppointmentID = appointmentMap.get(selectedDate);
+                // Use the selectedAppointmentID as needed
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle case when no item is selected
+            }
+        });
+
+        // Get the spinner for appointment selection
+        Spinner spinnerType = dialogView.findViewById(R.id.spinnerType);
+
+        // Create a predefined list of consultation types
+        ArrayList<String> consultations = new ArrayList<>();
+        consultations.add("Initial Consultation");
+        consultations.add("Follow-up Consultation");
+        consultations.add("Routine Check-up (Preventive Consultation)");
+        consultations.add("Emergency Consultation");
+        consultations.add("Specialist Consultation");
+        consultations.add("Telemedicine Consultation");
+        consultations.add("Second Opinion Consultation");
+        consultations.add("Pre-Surgery Consultation");
+        consultations.add("Post-Surgery Consultation");
+        consultations.add("Chronic Disease Management Consultation");
+        consultations.add("Psychiatric or Psychological Consultation");
+        consultations.add("Pregnancy and Maternity Consultation");
+        consultations.add("Palliative Care Consultation");
+        consultations.add("Nutrition Consultation");
+        consultations.add("Health Screening Consultation");
+        consultations.add("Vaccination Consultation");
+
+        // Create an ArrayAdapter to populate the spinner with the consultation types
+        ArrayAdapter<String> con_adapter = new ArrayAdapter<>(Doctor_PatientProfile.this,
+                android.R.layout.simple_spinner_item, consultations);
+        con_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Set the adapter to the spinner
+        spinnerType.setAdapter(con_adapter);
+
+        new AlertDialog.Builder(Doctor_PatientProfile.this)
+                .setTitle("Add New Consultation")
+                .setView(dialogView)
+                .setPositiveButton("Submit", (dialog, which) -> {
+                    EditText con_Diagnosis = dialogView.findViewById(R.id.txtDiagnosis);
+                    EditText con_Treatment = dialogView.findViewById(R.id.txtTreatment);
+                    EditText con_Desc = dialogView.findViewById(R.id.txtDesc);
+
+                    String selectedAppointment = selectedAppointmentID;
+                    String consultationType = spinnerType.getSelectedItem().toString();
+                    String consultationDiagnosis = con_Diagnosis.getText().toString();
+                    String consultationTreatment = con_Treatment.getText().toString();
+                    String consultationDescription = con_Desc.getText().toString();
+
+                    Date currentDate = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    String formattedDate = sdf.format(currentDate);
+
+                    String result = db.addConsulation(selectedAppointment, consultationType, consultationDiagnosis, consultationTreatment, consultationDescription, formattedDate);
+
+                    if ("success".equals(result)) {
+                        // Consultation added successfully
+                        Toast.makeText(Doctor_PatientProfile.this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
+
+                        ConsultationFragment consultationFragment = new ConsultationFragment();
+                        loadFragment(consultationFragment);
+                    } else {
+                        // Consultation addition failed
+                        Toast.makeText(Doctor_PatientProfile.this, "Failed to add entry. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()

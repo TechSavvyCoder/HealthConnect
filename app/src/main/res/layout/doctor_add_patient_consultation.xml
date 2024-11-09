@@ -6,27 +6,25 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <!-- Date picker -->
-<!--    <EditText-->
-<!--        android:id="@+id/editTextAppointmentDate"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Appointment Date"-->
-<!--        android:inputType="none"-->
-<!--        android:focusable="false"-->
-<!--        android:clickable="true"/>-->
+    <!-- Spinner for Appointment -->
+    <Spinner
+        android:id="@+id/spinnerAppointment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_bg"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
 
-    <!-- Time picker -->
-<!--    <EditText-->
-<!--        android:id="@+id/editTextAppointmentTime"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Appointment Time"-->
-<!--        android:inputType="none"-->
-<!--        android:focusable="false"-->
-<!--        android:clickable="true"/>-->
-
-
+    <!-- Spinner for Type of Consultation -->
+    <Spinner
+        android:id="@+id/spinnerType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_bg"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -34,13 +32,10 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextAppointmentDate"
+            android:id="@+id/txtDiagnosis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Appointment Date"
-            android:inputType="none"
-            android:focusable="false"
-            android:clickable="true"
+            android:hint="Diagnosis"
             android:textColorHint="#A6A6A6"
             android:textColor="#333333"
             android:background="@drawable/input_bg"
@@ -53,30 +48,27 @@
         android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextAppointmentTime"
+            android:id="@+id/txtTreatment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Appointment Time"
-            android:inputType="none"
-            android:focusable="false"
-            android:clickable="true"
+            android:hint="Treatment"
             android:textColorHint="#A6A6A6"
             android:textColor="#333333"
             android:background="@drawable/input_bg"
             android:padding="12dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="24dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextAppointmentDescription"
+            android:id="@+id/txtDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description"
+            android:inputType="textMultiLine"
             android:textColorHint="#A6A6A6"
             android:textColor="#333333"
             android:background="@drawable/input_bg"

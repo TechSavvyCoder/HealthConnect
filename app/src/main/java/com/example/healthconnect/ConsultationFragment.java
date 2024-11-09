@@ -1,5 +1,6 @@
 package com.example.healthconnect;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ public class ConsultationFragment extends Fragment {
     private ConsultationAdapter consultationAdapter;
 
     MyDatabaseHelper myDB;
-    ArrayList<String> con_id, patient_id, doctor_id, con_datetime, con_desc, con_status;
+    ArrayList<String> con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc;
     TextView noConsultationsMessage;
 
     // Variables to store patient info
@@ -44,11 +45,11 @@ public class ConsultationFragment extends Fragment {
 
         myDB = new MyDatabaseHelper(getContext());
         con_id = new ArrayList<>();
-        patient_id = new ArrayList<>();
-        doctor_id = new ArrayList<>();
         con_datetime = new ArrayList<>();
+        con_type = new ArrayList<>();
+        con_diagnosis = new ArrayList<>();
+        con_treatment = new ArrayList<>();
         con_desc = new ArrayList<>();
-        con_status = new ArrayList<>();
 
         noConsultationsMessage = view.findViewById(R.id.noConsultationsMessage);
         recyclerView = view.findViewById(R.id.rvConsultationList);
@@ -61,13 +62,14 @@ public class ConsultationFragment extends Fragment {
 
         storeDataInArray(loggedDoctorID, patient_id_from_bundle);
 
-        consultationAdapter = new ConsultationAdapter(getContext(), con_id, patient_id, doctor_id, con_datetime, con_desc, con_status);
+        consultationAdapter = new ConsultationAdapter(getContext(), con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc);
         recyclerView.setAdapter(consultationAdapter);
 
         return view;
     }
 
     void storeDataInArray(String loggedDoctorID, String currPatientID) {
+
         Cursor cursor = myDB.getAllConsultations(loggedDoctorID, currPatientID);
 
         if(cursor.getCount() == 0){
@@ -76,12 +78,17 @@ public class ConsultationFragment extends Fragment {
             noConsultationsMessage.setVisibility(View.GONE);
             while(cursor.moveToNext()){
                 con_id.add(cursor.getString(0));
-                patient_id.add(cursor.getString(1));
-                doctor_id.add(cursor.getString(2));
-                con_datetime.add(cursor.getString(3));
-                con_desc.add(cursor.getString(4));
-                con_status.add(cursor.getString(5));
+                con_datetime.add(cursor.getString(1));
+                con_type.add(cursor.getString(2));
+                con_diagnosis.add(cursor.getString(3));
+                con_treatment.add(cursor.getString(4));
+                con_desc.add(cursor.getString(5));
             }
         }
+
+        Log.d("ConsultationFragment", "Data size: " + con_id.size());
+        Log.d("ConsultationFragment", "Data size: " + con_datetime.size());
+        Log.d("ConsultationFragment", "Data size: " + con_type.size());
+
     }
 }

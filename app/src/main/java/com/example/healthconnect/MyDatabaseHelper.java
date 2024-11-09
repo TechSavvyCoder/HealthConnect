@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
@@ -57,6 +59,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String CONSULTATION_TABLE = "consultation";
     private static final String CONSULTATION_COLUMN_ID = "consultation_id";
     private static final String CONSULTATION_COLUMN_APPOINTMENTID = "appointment_id";
+    private static final String CONSULTATION_COLUMN_TYPE = "consultation_type";
     private static final String CONSULTATION_COLUMN_DIAGNOSIS = "consultation_diagnosis";
     private static final String CONSULTATION_COLUMN_TREATMENT = "consultation_treatment";
     private static final String CONSULTATION_COLUMN_DESC = "consultation_desc";
@@ -112,6 +115,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + CONSULTATION_TABLE + " ( " +
                         CONSULTATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         CONSULTATION_COLUMN_APPOINTMENTID + " TEXT NOT NULL, " +
+                        CONSULTATION_COLUMN_TYPE + " TEXT, " +
                         CONSULTATION_COLUMN_DIAGNOSIS + " TEXT, " +
                         CONSULTATION_COLUMN_TREATMENT + " TEXT, " +
                         CONSULTATION_COLUMN_DESC + " TEXT, " +
@@ -138,6 +142,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
 
         onCreate(db);
         db.close();
@@ -146,11 +151,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void makeThisTable() {
         // Recreate the database and tables
         SQLiteDatabase db = this.getWritableDatabase();
-
+        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
         String query_consultation =
                 "CREATE TABLE " + CONSULTATION_TABLE + " ( " +
                         CONSULTATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         CONSULTATION_COLUMN_APPOINTMENTID + " TEXT NOT NULL, " +
+                        CONSULTATION_COLUMN_TYPE + " TEXT, " +
                         CONSULTATION_COLUMN_DIAGNOSIS + " TEXT, " +
                         CONSULTATION_COLUMN_TREATMENT + " TEXT, " +
                         CONSULTATION_COLUMN_DESC + " TEXT, " +
@@ -207,7 +213,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created){
+    public void addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -220,6 +226,27 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert(APPOINTMENT_TABLE, null, cv);
     }
+
+    public String addConsulation(String app_id, String con_type, String con_diagnosis, String con_treatment, String cont_desc, String date_created) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(CONSULTATION_COLUMN_APPOINTMENTID, app_id);
+        cv.put(CONSULTATION_COLUMN_TYPE, con_type);
+        cv.put(CONSULTATION_COLUMN_DIAGNOSIS, con_diagnosis);
+        cv.put(CONSULTATION_COLUMN_TREATMENT, con_treatment);
+        cv.put(CONSULTATION_COLUMN_DESC, cont_desc);
+        cv.put(CONSULTATION_COLUMN_DATECREATED, date_created);
+
+        long result = db.insert(CONSULTATION_TABLE, null, cv);
+
+        if (result != -1) {
+            return "success";
+        } else {
+            return "failed";
+        }
+    }
+
 
     // Function to check user credentials
     public boolean checkUserCredentials(String user_name, String user_pass, Context context) {
@@ -293,27 +320,74 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getAllConsultations(String doctor_ID, String curr_Patient_ID) {
+    public ArrayList<HashMap<String, String>> getAppointmentsForPatient(String doctor_ID, String curr_Patient_ID) {
+        ArrayList<HashMap<String, String>> appointments = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // SQL query to join appointments and consultations and filter by patient_id
-        String query = "SELECT * " +
-                "FROM " + CONSULTATION_TABLE + " c " +
-                "INNER JOIN " + APPOINTMENT_TABLE + " a ON c." + CONSULTATION_COLUMN_APPOINTMENTID + " = a." + APPOINTMENT_COLUMN_ID + " " +
-                "WHERE a." + APPOINTMENT_COLUMN_PATIENTID + " = ? " +
-                "AND a." + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
-                "ORDER BY a." + APPOINTMENT_COLUMN_DATETIME + " ASC";
+        // Query to get appointments related to the given patient ID
+        String query = "SELECT * FROM " + APPOINTMENT_TABLE +
+                " WHERE " + APPOINTMENT_COLUMN_PATIENTID + " = ? " +
+                " AND " + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                " ORDER BY " + APPOINTMENT_COLUMN_DATETIME + " ASC";
+        Cursor cursor = db.rawQuery(query, new String[]{curr_Patient_ID, doctor_ID});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int idIndex = cursor.getColumnIndex("appointment_id"); // Assuming 'appointment_id' is the ID column
+                int dateIndex = cursor.getColumnIndex("appointment_dateTime");
+                String appointmentID = cursor.getString(idIndex);
+                String appointmentDateTime = cursor.getString(dateIndex);
+
+                HashMap<String, String> appointment = new HashMap<>();
+                appointment.put("id", appointmentID);
+                appointment.put("dateTime", appointmentDateTime);
+                appointments.add(appointment);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return appointments;
+    }
+
+    public Cursor getAllConsultations(String doctor_ID, String curr_Patient_ID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + CONSULTATION_TABLE + " c "+
+                " JOIN " + APPOINTMENT_TABLE + " a " +
+                " ON c." + CONSULTATION_COLUMN_APPOINTMENTID + " = a." + APPOINTMENT_COLUMN_ID +
+                " WHERE a." +  APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                " AND a." +  APPOINTMENT_COLUMN_PATIENTID + " = ? ";
 
         Cursor cursor = null;
 
         try {
-            // Execute the query with the patientID parameter
-            cursor = db.rawQuery(query, new String[]{curr_Patient_ID, doctor_ID});
+            cursor = db.rawQuery(query, new String[]{doctor_ID, curr_Patient_ID});
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return cursor;
+    }
+
+    public String getAppointmentInfoByID(String app_id, String colname) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                APPOINTMENT_TABLE,
+                new String[]{colname},
+                APPOINTMENT_COLUMN_ID + " = ?",
+                new String[]{app_id},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int col_index = cursor.getColumnIndex(colname);
+            String col_value = cursor.getString(col_index);
+
+            cursor.close();
+            return col_value;
+        } else {
+            return null;
+        }
     }
 
     public String getUserNameById(String userId) {
@@ -339,11 +413,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public String getUserInfo(String userId, String tableName) {
+    public String getUserInfo(String userId, String colname) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 USER_TABLE_NAME,
-                new String[]{tableName},
+                new String[]{colname},
                 USER_COLUMN_USERROLE + " = ? AND " + USER_COLUMN_ID + " = ?",
                 new String[]{"Patient", userId},
                 null,
@@ -352,7 +426,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         );
 
         if (cursor != null && cursor.moveToFirst()) {
-            int col_index = cursor.getColumnIndex(tableName);
+            int col_index = cursor.getColumnIndex(colname);
             String col_value = cursor.getString(col_index);
 
             cursor.close();
