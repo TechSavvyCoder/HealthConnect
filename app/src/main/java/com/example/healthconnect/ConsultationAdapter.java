@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
 
     Context context;
     ArrayList<String> con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc;
+    MyDatabaseHelper myDB;
 
     public ConsultationAdapter(Context context, ArrayList<String> con_id, ArrayList<String> con_datetime, ArrayList<String> con_type,
                                ArrayList<String> con_diagnosis, ArrayList<String> con_treatment, ArrayList<String> con_desc) {
@@ -30,6 +32,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
         this.con_diagnosis = con_diagnosis;
         this.con_treatment = con_treatment;
         this.con_desc = con_desc;
+        this.myDB = new MyDatabaseHelper(context);  // Initialize database helper here
     }
 
     @NonNull
@@ -62,6 +65,9 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
             holder.tvConTreatment.setText("Treatment: " + con_treatment.get(position));
             holder.tvConDesc.setText(con_desc.get(position));
 
+            // Set OnClickListener for the Delete button
+            holder.btnDelete.setOnClickListener(v -> showDeleteConfirmationDialog(position, outputDateString, con_desc.get(position)));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +80,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
 
     public static class ConsultationViewHolder extends RecyclerView.ViewHolder {
         TextView tvConDateTime, tvConType, tvConDiagnosis, tvConTreatment, tvConDesc;
-
+        Button btnDelete;
 
         public ConsultationViewHolder(View itemView) {
             super(itemView);
@@ -83,6 +89,46 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
             tvConDiagnosis = itemView.findViewById(R.id.tvConDiagnosis);
             tvConTreatment = itemView.findViewById(R.id.tvConTreatment);
             tvConDesc = itemView.findViewById(R.id.tvConDesc);
+
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+        }
+    }
+
+    // Show confirmation dialog before deletion
+    private void showDeleteConfirmationDialog(int position, String con_date, String con_desc) {
+        new android.app.AlertDialog.Builder(context)
+                .setTitle("Delete entry?")
+                .setMessage("This will delete your consultation on " + con_date + "\n\nDescription: " + con_desc)
+                .setCancelable(false)
+                .setPositiveButton("Yes, delete", (dialog, id) -> {
+                    deleteAppointment(position);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // Method to delete the appointment from the database
+    private void deleteAppointment(int position) {
+        // Get the appointment ID from the data
+        String consultationId = con_id.get(position);
+
+        // Delete the appointment from the database
+        boolean isDeleted = myDB.deleteEntry("consultation", "consultation_id", consultationId);
+
+        if (isDeleted) {
+            // Remove the item from the list and notify the adapter
+            con_id.remove(position);
+            con_datetime.remove(position);
+            con_type.remove(position);
+            con_diagnosis.remove(position);
+            con_treatment.remove(position);
+            con_desc.remove(position);
+            notifyItemRemoved(position);
+
+            // Optionally, you can show a toast message
+            Toast.makeText(context, "Entry has been deleted successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Failed to delete this entry", Toast.LENGTH_SHORT).show();
         }
     }
 }

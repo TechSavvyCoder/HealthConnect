@@ -77,7 +77,8 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             tv_appDateTime = itemView.findViewById(R.id.tvAppDateTime);
             tv_appStatusValue = itemView.findViewById(R.id.tvAppStatusValue);
             tv_appDesc = itemView.findViewById(R.id.tvAppDesc);
-            btnDelete = itemView.findViewById(R.id.btnDelete);  // Button reference
+
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 
@@ -87,12 +88,11 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
                 .setTitle("Delete appointment?")
                 .setMessage("This will delete your appointment on " + app_date + "\n\nDescription: " + app_desc)
                 .setCancelable(false)
-                .setPositiveButton("yes, delete", (dialog, id) -> {
+                .setPositiveButton("Yes, delete", (dialog, id) -> {
                     deleteAppointment(position);
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-
     }
 
     // Method to delete the appointment from the database
