@@ -9,4 +9,7 @@
     <color name="primary_button_font">#FFFFFF</color>
     <color name="secondary_button">#FFFFFF</color>
     <color name="secondary_button_font">#407CE2</color>
+
+    <color name="colorAccent">#243F74</color>
+
 </resources>

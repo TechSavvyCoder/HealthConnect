@@ -41,4 +41,56 @@
         android:text="Description"
         android:textSize="16sp" />
 
+    <!-- Buttons Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:paddingTop="16dp"
+        android:gravity="start">
+
+        <!-- View Button -->
+        <Button
+            android:id="@+id/btnView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/primary_button"
+            android:text="View"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:layout_marginEnd="8dp"
+            android:drawableLeft="@drawable/vector_remove_red_eye_24"
+            />
+
+        <!-- Edit Button -->
+        <Button
+            android:id="@+id/btnEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/black"
+            android:text="Edit"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:layout_marginEnd="8dp"
+            android:drawableLeft="@drawable/vector_edit_24"
+            />
+
+        <!-- Delete Button -->
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:drawableLeft="@drawable/vector_delete_24"
+            android:paddingLeft="20dp"
+            android:text="Delete"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
 </LinearLayout>
