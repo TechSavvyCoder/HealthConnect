@@ -237,7 +237,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created) {
+    public String addAppointment(String patient_id, String doctor_id, String app_datetime, String app_desc, String app_status, String date_created) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -249,6 +249,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(APPOINTMENT_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(APPOINTMENT_TABLE, null, cv);
+
+        if (result != -1) {
+            return "success";
+        } else {
+            return "failed";
+        }
     }
 
     public String addConsulation(String app_id, String con_type, String con_diagnosis, String con_treatment, String cont_desc, String date_created) {
@@ -391,6 +397,25 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return appointments;
     }
 
+    public Cursor getAllConsultations(String doctor_ID, String curr_Patient_ID) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + CONSULTATION_TABLE + " c "+
+                " JOIN " + APPOINTMENT_TABLE + " a " +
+                " ON c." + CONSULTATION_COLUMN_APPOINTMENTID + " = a." + APPOINTMENT_COLUMN_ID +
+                " WHERE a." +  APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                " AND a." +  APPOINTMENT_COLUMN_PATIENTID + " = ? ";
+
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(query, new String[]{doctor_ID, curr_Patient_ID});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
     public ArrayList<HashMap<String, String>> getConsultationsForPatient(String doctor_ID, String curr_Patient_ID) {
         ArrayList<HashMap<String, String>> consultations = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -429,13 +454,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return consultations; // Return the list of consultations
     }
 
-    public Cursor getAllConsultations(String doctor_ID, String curr_Patient_ID) {
+    public Cursor getAllMedications(String doctor_ID, String curr_Patient_ID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + CONSULTATION_TABLE + " c "+
-                " JOIN " + APPOINTMENT_TABLE + " a " +
-                " ON c." + CONSULTATION_COLUMN_APPOINTMENTID + " = a." + APPOINTMENT_COLUMN_ID +
-                " WHERE a." +  APPOINTMENT_COLUMN_DOCTORID + " = ? " +
-                " AND a." +  APPOINTMENT_COLUMN_PATIENTID + " = ? ";
+        String query = "SELECT * FROM " + MEDICATION_TABLE + " m " +
+                "JOIN " + CONSULTATION_TABLE + " c ON m.consultation_id = c.consultation_id " +
+                "JOIN " + APPOINTMENT_TABLE + " a ON c.appointment_id = a.appointment_id " +
+                "WHERE a." + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                "AND a." + APPOINTMENT_COLUMN_PATIENTID + " = ? ";
 
         Cursor cursor = null;
 
@@ -448,6 +473,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+
     public String getAppointmentInfoByID(String app_id, String colname) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
@@ -455,6 +481,29 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 new String[]{colname},
                 APPOINTMENT_COLUMN_ID + " = ?",
                 new String[]{app_id},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int col_index = cursor.getColumnIndex(colname);
+            String col_value = cursor.getString(col_index);
+
+            cursor.close();
+            return col_value;
+        } else {
+            return null;
+        }
+    }
+
+    public String getConsultationInfoByID(String med_id, String colname) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                CONSULTATION_TABLE,
+                new String[]{colname},
+                CONSULTATION_COLUMN_ID + " = ?",
+                new String[]{med_id},
                 null,
                 null,
                 null

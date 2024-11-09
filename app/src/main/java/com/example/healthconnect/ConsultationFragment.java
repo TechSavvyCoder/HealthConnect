@@ -85,10 +85,5 @@ public class ConsultationFragment extends Fragment {
                 con_desc.add(cursor.getString(5));
             }
         }
-
-        Log.d("ConsultationFragment", "Data size: " + con_id.size());
-        Log.d("ConsultationFragment", "Data size: " + con_datetime.size());
-        Log.d("ConsultationFragment", "Data size: " + con_type.size());
-
     }
 }

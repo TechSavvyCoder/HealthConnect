@@ -374,8 +374,8 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                             // Consultation added successfully
                             Toast.makeText(Doctor_PatientProfile.this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
 
-//                            ConsultationFragment consultationFragment = new ConsultationFragment();
-//                            loadFragment(consultationFragment);
+                            MedicationFragment medicationFragment = new MedicationFragment();
+                            loadFragment(medicationFragment);
                         } else {
                             // Consultation addition failed
                             Toast.makeText(Doctor_PatientProfile.this, "Failed to add entry. Please try again.", Toast.LENGTH_SHORT).show();
@@ -442,14 +442,18 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                         String formattedDate = sdf.format(currentDate);
 
-                        Toast.makeText(Doctor_PatientProfile.this,
-                                "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText,
-                                Toast.LENGTH_SHORT).show();
+                        String result = db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
 
-                        db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
+                        if ("success".equals(result)) {
+                            // Consultation added successfully
+                            Toast.makeText(Doctor_PatientProfile.this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
 
-                        AppointmentFragment appointmentFragment = new AppointmentFragment();
-                        loadFragment(appointmentFragment);
+                            AppointmentFragment appointmentFragment = new AppointmentFragment();
+                            loadFragment(appointmentFragment);
+                        } else {
+                            // Consultation addition failed
+                            Toast.makeText(Doctor_PatientProfile.this, "Failed to add entry. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     }

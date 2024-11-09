@@ -56,7 +56,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
             SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy 'at' h:mm a", Locale.getDefault());
             outputDateString = outputFormat.format(date);
 
-            holder.tvConDateTime.setText(outputDateString);
+            holder.tvConDateTime.setText("Appointment Date: " + outputDateString);
             holder.tvConType.setText("Consultation Type: " + con_type.get(position));
             holder.tvConDiagnosis.setText("Diagnosis: " + con_diagnosis.get(position));
             holder.tvConTreatment.setText("Treatment: " + con_treatment.get(position));
