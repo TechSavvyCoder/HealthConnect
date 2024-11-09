@@ -590,4 +590,25 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return rowsDeleted > 0;
     }
 
+    // Function to UPDATE entries
+    public boolean updateAppointment(String app_id, String newDateTime, String newDesc, String newStatus, String date_updated) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(APPOINTMENT_COLUMN_DATETIME, newDateTime);  // Update dateTime
+        contentValues.put(APPOINTMENT_COLUMN_DESC, newDesc);          // Update description
+        contentValues.put(APPOINTMENT_COLUMN_STATUS, newStatus); // Update the status field
+        contentValues.put(APPOINTMENT_COLUMN_DATEUPDATED, date_updated); // Update the date_updated field
+
+        // Define the condition to update the row (i.e., matching the appointment_id)
+        String selection = APPOINTMENT_COLUMN_ID + " = ?";
+        String[] selectionArgs = { app_id };
+
+        // Perform the update and return whether it was successful
+        int rowsUpdated = db.update(APPOINTMENT_TABLE, contentValues, selection, selectionArgs);
+
+        db.close();
+
+        return rowsUpdated > 0;
+    }
 }

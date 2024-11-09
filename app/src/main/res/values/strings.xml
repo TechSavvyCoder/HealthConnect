@@ -49,4 +49,11 @@
     <!-- Profile -->
     <string name="txtDescription">Description</string>
 
+    <!-- Appointment -->
+    <string-array name="appointment_status_array">
+        <item>Pending</item>
+        <item>Completed</item>
+        <item>Canceled</item>
+        <item>No Show</item>
+    </string-array>
 </resources>
