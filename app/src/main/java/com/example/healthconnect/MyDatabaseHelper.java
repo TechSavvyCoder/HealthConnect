@@ -66,6 +66,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String CONSULTATION_COLUMN_DATECREATED = "date_created";
     private static final String CONSULTATION_COLUMN_DATEUPDATED = "date_updated";
 
+    // Medication Table
+    private static final String MEDICATION_TABLE = "medication";
+    private static final String MEDICATION_COLUMN_ID = "medication_id";
+    private static final String MEDICATION_COLUMN_CONSULTATIONID = "consultation_id";
+    private static final String MEDICATION_COLUMN_DESC = "medication_desc";
+    private static final String MEDICATION_COLUMN_DOSAGE = "medication_dosage";
+    private static final String MEDICATION_COLUMN_FREQUENCY = "medication_frequency";
+    private static final String MEDICATION_COLUMN_DURATION = "medication_duration";
+    private static final String MEDICATION_COLUMN_DATECREATED = "date_created";
+    private static final String MEDICATION_COLUMN_DATEUPDATED = "date_updated";
+
     public MyDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -123,6 +134,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
         db.execSQL(query_consultation);
+
+        String query_medication =
+                "CREATE TABLE " + MEDICATION_TABLE + " ( " +
+                        MEDICATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        MEDICATION_COLUMN_CONSULTATIONID + " TEXT NOT NULL, " +
+                        MEDICATION_COLUMN_DESC + " TEXT, " +
+                        MEDICATION_COLUMN_DOSAGE + " TEXT, " +
+                        MEDICATION_COLUMN_FREQUENCY + " TEXT, " +
+                        MEDICATION_COLUMN_DURATION + " TEXT, " +
+                        MEDICATION_COLUMN_DATECREATED + " TEXT, " +
+                        MEDICATION_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_medication);
     }
 
     @Override
@@ -151,19 +175,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void makeThisTable() {
         // Recreate the database and tables
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
-        String query_consultation =
-                "CREATE TABLE " + CONSULTATION_TABLE + " ( " +
-                        CONSULTATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        CONSULTATION_COLUMN_APPOINTMENTID + " TEXT NOT NULL, " +
-                        CONSULTATION_COLUMN_TYPE + " TEXT, " +
-                        CONSULTATION_COLUMN_DIAGNOSIS + " TEXT, " +
-                        CONSULTATION_COLUMN_TREATMENT + " TEXT, " +
-                        CONSULTATION_COLUMN_DESC + " TEXT, " +
-                        CONSULTATION_COLUMN_DATECREATED + " TEXT, " +
-                        CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
+        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
+        String query_medication =
+                "CREATE TABLE " + MEDICATION_TABLE + " ( " +
+                        MEDICATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        MEDICATION_COLUMN_CONSULTATIONID + " TEXT NOT NULL, " +
+                        MEDICATION_COLUMN_DESC + " TEXT, " +
+                        MEDICATION_COLUMN_DOSAGE + " TEXT, " +
+                        MEDICATION_COLUMN_FREQUENCY + " TEXT, " +
+                        MEDICATION_COLUMN_DURATION + " TEXT, " +
+                        MEDICATION_COLUMN_DATECREATED + " TEXT, " +
+                        MEDICATION_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-        db.execSQL(query_consultation);
+        db.execSQL(query_medication);
     }
 
     // Function to CREATE new entry
@@ -247,6 +271,25 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public String addMedication(String con_id, String med_desc, String med_dosage, String med_frequency, String med_duration, String date_created) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(MEDICATION_COLUMN_CONSULTATIONID, con_id);
+        cv.put(MEDICATION_COLUMN_DESC, med_desc);
+        cv.put(MEDICATION_COLUMN_DOSAGE, med_dosage);
+        cv.put(MEDICATION_COLUMN_FREQUENCY, med_frequency);
+        cv.put(MEDICATION_COLUMN_DURATION, med_duration);
+        cv.put(MEDICATION_COLUMN_DATECREATED, date_created);
+
+        long result = db.insert(MEDICATION_TABLE, null, cv);
+
+        if (result != -1) {
+            return "success";
+        } else {
+            return "failed";
+        }
+    }
 
     // Function to check user credentials
     public boolean checkUserCredentials(String user_name, String user_pass, Context context) {
@@ -346,6 +389,44 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return appointments;
+    }
+
+    public ArrayList<HashMap<String, String>> getConsultationsForPatient(String doctor_ID, String curr_Patient_ID) {
+        ArrayList<HashMap<String, String>> consultations = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query to get consultation description and associated appointment dateTime for the given patient ID
+        String query = "SELECT c.consultation_id, c.consultation_desc, a.appointment_dateTime " +
+                "FROM " + CONSULTATION_TABLE + " c " +
+                "INNER JOIN " + APPOINTMENT_TABLE + " a ON c.appointment_id = a.appointment_id " +
+                "WHERE a.patient_id = ? AND a.doctor_id = ? " +
+                "ORDER BY a.appointment_dateTime ASC";
+        Cursor cursor = db.rawQuery(query, new String[]{curr_Patient_ID, doctor_ID});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Get columns
+                int idIndex = cursor.getColumnIndex("consultation_id");
+                int descIndex = cursor.getColumnIndex("consultation_desc");
+                int dateIndex = cursor.getColumnIndex("appointment_dateTime");
+
+                String consultationID = cursor.getString(idIndex);
+                String consultationDesc = cursor.getString(descIndex);
+                String appointmentDateTime = cursor.getString(dateIndex);
+
+                // Create a HashMap to store consultation details
+                HashMap<String, String> consultation = new HashMap<>();
+                consultation.put("consultation_id", consultationID); // Store consultation ID
+                consultation.put("consultationDesc", consultationDesc);
+                consultation.put("appointmentDateTime", appointmentDateTime);
+
+                consultations.add(consultation);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+        db.close();
+        return consultations; // Return the list of consultations
     }
 
     public Cursor getAllConsultations(String doctor_ID, String curr_Patient_ID) {

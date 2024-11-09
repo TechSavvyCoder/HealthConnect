@@ -45,6 +45,9 @@ public class Doctor_PatientProfile extends AppCompatActivity {
     String selectedDate;
     String selectedAppointmentID;
 
+    String selectedConsultationID;
+    String consultationID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,81 +157,11 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                             showAddConsultationDialog();
                             break;
                         case 1:
-                            Toast.makeText(Doctor_PatientProfile.this, "Add new medication clicked", Toast.LENGTH_SHORT).show();
+                            showAddMedicationDialog();
                             break;
                         case 2:
                             showAddAppointmentDialog();
                             break;
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
-    private void showAddAppointmentDialog() {
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.doctor_add_patient_appointment, null);
-
-        EditText editTextDate = dialogView.findViewById(R.id.editTextAppointmentDate);
-        EditText editTextTime = dialogView.findViewById(R.id.editTextAppointmentTime);
-
-        editTextDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(Doctor_PatientProfile.this,
-                    (view, selectedYear, selectedMonth, selectedDay) -> {
-                        // Format the month and day with leading zeros if needed
-                        String formattedDate = String.format("%04d/%02d/%02d", selectedYear, selectedMonth + 1, selectedDay);
-                        editTextDate.setText(formattedDate);
-                    }, year, month, dayOfMonth);
-            datePickerDialog.show();
-        });
-
-
-        editTextTime.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-
-            TimePickerDialog timePickerDialog = new TimePickerDialog(Doctor_PatientProfile.this,
-                    (view, selectedHour, selectedMinute) -> {
-                        String formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
-                        editTextTime.setText(formattedTime);
-                    }, hour, minute, true);
-            timePickerDialog.show();
-        });
-
-        new AlertDialog.Builder(Doctor_PatientProfile.this)
-                .setTitle("Add New Appointment")
-                .setView(dialogView)
-                .setPositiveButton("Submit", (dialog, which) -> {
-                    EditText appointmentDate = dialogView.findViewById(R.id.editTextAppointmentDate);
-                    EditText appointmentTime = dialogView.findViewById(R.id.editTextAppointmentTime);
-                    EditText appointmentDesc = dialogView.findViewById(R.id.editTextAppointmentDescription);
-
-                    String appointmentDateText = appointmentDate.getText().toString();
-                    String appointmentTimeText = appointmentTime.getText().toString();
-                    String appointmentDescText = appointmentDesc.getText().toString();
-
-                    if(!appointmentDateText.trim().isEmpty() && !appointmentTimeText.trim().isEmpty()  && !appointmentDescText.trim().isEmpty()){
-                        Date currentDate = new Date();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                        String formattedDate = sdf.format(currentDate);
-
-                        Toast.makeText(Doctor_PatientProfile.this,
-                                "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText,
-                                Toast.LENGTH_SHORT).show();
-
-                        db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
-
-                        AppointmentFragment appointmentFragment = new AppointmentFragment();
-                        loadFragment(appointmentFragment);
-                    } else {
-                        Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -358,4 +291,172 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                 .create()
                 .show();
     }
+
+    private void showAddMedicationDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.doctor_add_patient_medication, null);
+
+        db = new MyDatabaseHelper(Doctor_PatientProfile.this);
+        ArrayList<HashMap<String, String>> consultations = db.getConsultationsForPatient(loggedInUserID, intent_user_id);
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy 'at' h:mm a", Locale.getDefault());
+
+        ArrayList<String> new_consultations = new ArrayList<>();
+        final HashMap<String, String> consultationMap = new HashMap<>();
+
+        for (HashMap<String, String> consultation : consultations) {
+            String consultationDesc = consultation.get("consultationDesc");
+            String appointmentDateTime = consultation.get("appointmentDateTime");
+            String id = consultation.get("consultation_id");
+            try {
+                // Parse the appointment string to a Date object
+                Date date = inputFormat.parse(appointmentDateTime);
+                // Format the Date object to the desired format
+                if (date != null) {
+                    String formattedDate = outputFormat.format(date);
+                    new_consultations.add(consultationDesc + " - " +formattedDate);
+                    consultationMap.put(formattedDate, id); // Associate formatted date with ID
+                } else {
+                    new_consultations.add("No consultation");
+                    consultationMap.put("No consultation", id);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Set up the Spinner with the labels
+        Spinner spinnerConsultation = dialogView.findViewById(R.id.spinnerConsultation);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new_consultations);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerConsultation.setAdapter(spinnerAdapter);
+
+        // Handle item selection
+        spinnerConsultation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedConsultationID = new_consultations.get(position);
+                consultationID = consultations.get(position).get("consultation_id");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Handle no selection
+            }
+        });
+
+
+        new AlertDialog.Builder(Doctor_PatientProfile.this)
+                .setTitle("Add New Medication")
+                .setView(dialogView)
+                .setPositiveButton("Submit", (dialog, which) -> {
+                    EditText med_Desc = dialogView.findViewById(R.id.txtDesc);
+                    EditText med_Dosage = dialogView.findViewById(R.id.txtDosage);
+                    EditText med_Frequency = dialogView.findViewById(R.id.txtFrequency);
+                    EditText med_Duration = dialogView.findViewById(R.id.txtDuration);
+
+                    String selectedConsultation = consultationID;
+                    String medicationDescription = med_Desc.getText().toString();
+                    String medicationDosage = med_Dosage.getText().toString();
+                    String medicationFrequency = med_Frequency.getText().toString();
+                    String medicationDuration = med_Duration.getText().toString();
+
+                    if(!medicationDescription.trim().isEmpty() && !medicationDosage.trim().isEmpty()  && !medicationFrequency.trim().isEmpty() && !medicationDuration.trim().isEmpty()) {
+
+                        Date currentDate = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String formattedDate = sdf.format(currentDate);
+
+                        String result = db.addMedication(selectedConsultation, medicationDescription, medicationDosage, medicationFrequency, medicationDuration, formattedDate);
+
+                        if ("success".equals(result)) {
+                            // Consultation added successfully
+                            Toast.makeText(Doctor_PatientProfile.this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
+
+//                            ConsultationFragment consultationFragment = new ConsultationFragment();
+//                            loadFragment(consultationFragment);
+                        } else {
+                            // Consultation addition failed
+                            Toast.makeText(Doctor_PatientProfile.this, "Failed to add entry. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    private void showAddAppointmentDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.doctor_add_patient_appointment, null);
+
+        EditText editTextDate = dialogView.findViewById(R.id.editTextAppointmentDate);
+        EditText editTextTime = dialogView.findViewById(R.id.editTextAppointmentTime);
+
+        editTextDate.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(Doctor_PatientProfile.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        // Format the month and day with leading zeros if needed
+                        String formattedDate = String.format("%04d/%02d/%02d", selectedYear, selectedMonth + 1, selectedDay);
+                        editTextDate.setText(formattedDate);
+                    }, year, month, dayOfMonth);
+            datePickerDialog.show();
+        });
+
+
+        editTextTime.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(Doctor_PatientProfile.this,
+                    (view, selectedHour, selectedMinute) -> {
+                        String formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
+                        editTextTime.setText(formattedTime);
+                    }, hour, minute, true);
+            timePickerDialog.show();
+        });
+
+        new AlertDialog.Builder(Doctor_PatientProfile.this)
+                .setTitle("Add New Appointment")
+                .setView(dialogView)
+                .setPositiveButton("Submit", (dialog, which) -> {
+                    EditText appointmentDate = dialogView.findViewById(R.id.editTextAppointmentDate);
+                    EditText appointmentTime = dialogView.findViewById(R.id.editTextAppointmentTime);
+                    EditText appointmentDesc = dialogView.findViewById(R.id.editTextAppointmentDescription);
+
+                    String appointmentDateText = appointmentDate.getText().toString();
+                    String appointmentTimeText = appointmentTime.getText().toString();
+                    String appointmentDescText = appointmentDesc.getText().toString();
+
+                    if(!appointmentDateText.trim().isEmpty() && !appointmentTimeText.trim().isEmpty()  && !appointmentDescText.trim().isEmpty()){
+                        Date currentDate = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String formattedDate = sdf.format(currentDate);
+
+                        Toast.makeText(Doctor_PatientProfile.this,
+                                "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText,
+                                Toast.LENGTH_SHORT).show();
+
+                        db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
+
+                        AppointmentFragment appointmentFragment = new AppointmentFragment();
+                        loadFragment(appointmentFragment);
+                    } else {
+                        Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
 }
