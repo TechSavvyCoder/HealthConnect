@@ -181,11 +181,13 @@ public class Doctor_PatientProfile extends AppCompatActivity {
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(Doctor_PatientProfile.this,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
-                        String formattedDate = selectedYear + "/" + (selectedMonth + 1) + "/" + selectedDay;
+                        // Format the month and day with leading zeros if needed
+                        String formattedDate = String.format("%04d/%02d/%02d", selectedYear, selectedMonth + 1, selectedDay);
                         editTextDate.setText(formattedDate);
                     }, year, month, dayOfMonth);
             datePickerDialog.show();
         });
+
 
         editTextTime.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
@@ -212,18 +214,22 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                     String appointmentTimeText = appointmentTime.getText().toString();
                     String appointmentDescText = appointmentDesc.getText().toString();
 
-                    Date currentDate = new Date();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    String formattedDate = sdf.format(currentDate);
+                    if(!appointmentDateText.trim().isEmpty() && !appointmentTimeText.trim().isEmpty()  && !appointmentDescText.trim().isEmpty()){
+                        Date currentDate = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String formattedDate = sdf.format(currentDate);
 
-                    Toast.makeText(Doctor_PatientProfile.this,
-                            "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText,
-                            Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Doctor_PatientProfile.this,
+                                "Appointment added for " + intent_user_id + " on " + appointmentDateText + " at " + appointmentTimeText,
+                                Toast.LENGTH_SHORT).show();
 
-                    db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
+                        db.addAppointment(intent_user_id, loggedInUserID, appointmentDateText + " " + appointmentTimeText, appointmentDescText, "Pending", formattedDate);
 
-                    AppointmentFragment appointmentFragment = new AppointmentFragment();
-                    loadFragment(appointmentFragment);
+                        AppointmentFragment appointmentFragment = new AppointmentFragment();
+                        loadFragment(appointmentFragment);
+                    } else {
+                        Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()
@@ -295,19 +301,13 @@ public class Doctor_PatientProfile extends AppCompatActivity {
         ArrayList<String> consultations = new ArrayList<>();
         consultations.add("Initial Consultation");
         consultations.add("Follow-up Consultation");
-        consultations.add("Routine Check-up (Preventive Consultation)");
         consultations.add("Emergency Consultation");
         consultations.add("Specialist Consultation");
         consultations.add("Telemedicine Consultation");
         consultations.add("Second Opinion Consultation");
         consultations.add("Pre-Surgery Consultation");
         consultations.add("Post-Surgery Consultation");
-        consultations.add("Chronic Disease Management Consultation");
-        consultations.add("Psychiatric or Psychological Consultation");
-        consultations.add("Pregnancy and Maternity Consultation");
-        consultations.add("Palliative Care Consultation");
         consultations.add("Nutrition Consultation");
-        consultations.add("Health Screening Consultation");
         consultations.add("Vaccination Consultation");
 
         // Create an ArrayAdapter to populate the spinner with the consultation types
@@ -332,21 +332,26 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                     String consultationTreatment = con_Treatment.getText().toString();
                     String consultationDescription = con_Desc.getText().toString();
 
-                    Date currentDate = new Date();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    String formattedDate = sdf.format(currentDate);
+                    if(!selectedAppointment.isEmpty() && !consultationType.isEmpty() && !consultationDiagnosis.trim().isEmpty() && !consultationTreatment.trim().isEmpty()  && !consultationDescription.trim().isEmpty()) {
 
-                    String result = db.addConsulation(selectedAppointment, consultationType, consultationDiagnosis, consultationTreatment, consultationDescription, formattedDate);
+                        Date currentDate = new Date();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String formattedDate = sdf.format(currentDate);
 
-                    if ("success".equals(result)) {
-                        // Consultation added successfully
-                        Toast.makeText(Doctor_PatientProfile.this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
+                        String result = db.addConsulation(selectedAppointment, consultationType, consultationDiagnosis, consultationTreatment, consultationDescription, formattedDate);
 
-                        ConsultationFragment consultationFragment = new ConsultationFragment();
-                        loadFragment(consultationFragment);
+                        if ("success".equals(result)) {
+                            // Consultation added successfully
+                            Toast.makeText(Doctor_PatientProfile.this, "Entry added successfully!", Toast.LENGTH_SHORT).show();
+
+                            ConsultationFragment consultationFragment = new ConsultationFragment();
+                            loadFragment(consultationFragment);
+                        } else {
+                            // Consultation addition failed
+                            Toast.makeText(Doctor_PatientProfile.this, "Failed to add entry. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        // Consultation addition failed
-                        Toast.makeText(Doctor_PatientProfile.this, "Failed to add entry. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
