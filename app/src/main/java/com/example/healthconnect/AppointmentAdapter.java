@@ -70,11 +70,11 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             if (status.equals("Pending")) {
                 holder.tv_appStatusValue.setTextColor(Color.BLACK); // Black for Pending
             } else if (status.equals("Completed")) {
-                holder.tv_appStatusValue.setTextColor(Color.GREEN); // Green for Completed
+                holder.tv_appStatusValue.setTextColor(Color.parseColor("#008000")); // Green for Completed
             } else if (status.equals("Canceled")) {
                 holder.tv_appStatusValue.setTextColor(Color.RED); // Red for Canceled
             } else if (status.equals("No Show")) {
-                holder.tv_appStatusValue.setTextColor(Color.DKGRAY); // Gray for No Show
+                holder.tv_appStatusValue.setTextColor(Color.parseColor("#b48900")); // Gray for No Show
             }
 
             holder.tv_appDateTime.setText(outputDateString);
