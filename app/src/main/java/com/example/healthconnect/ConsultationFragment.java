@@ -62,7 +62,7 @@ public class ConsultationFragment extends Fragment {
 
         storeDataInArray(loggedDoctorID, patient_id_from_bundle);
 
-        consultationAdapter = new ConsultationAdapter(getContext(), con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc);
+        consultationAdapter = new ConsultationAdapter(getContext(), con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc, loggedDoctorID, patient_id_from_bundle);
         recyclerView.setAdapter(consultationAdapter);
 
         return view;

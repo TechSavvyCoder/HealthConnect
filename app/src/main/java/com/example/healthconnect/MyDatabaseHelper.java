@@ -611,4 +611,27 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         return rowsUpdated > 0;
     }
+
+    public boolean updateConsultation(String con_id, String new_appointment, String new_type, String new_diagnosis, String new_treatment, String new_desc, String date_updated) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONSULTATION_COLUMN_APPOINTMENTID, new_appointment);
+        contentValues.put(CONSULTATION_COLUMN_TYPE, new_type);
+        contentValues.put(CONSULTATION_COLUMN_DIAGNOSIS, new_diagnosis);
+        contentValues.put(CONSULTATION_COLUMN_TREATMENT, new_treatment);
+        contentValues.put(CONSULTATION_COLUMN_DESC, new_desc);
+        contentValues.put(CONSULTATION_COLUMN_DATEUPDATED, date_updated);
+
+        // Define the condition to update the row (i.e., matching the appointment_id)
+        String selection = CONSULTATION_COLUMN_ID + " = ?";
+        String[] selectionArgs = { con_id };
+
+        // Perform the update and return whether it was successful
+        int rowsUpdated = db.update(CONSULTATION_TABLE, contentValues, selection, selectionArgs);
+
+        db.close();
+
+        return rowsUpdated > 0;
+    }
 }
