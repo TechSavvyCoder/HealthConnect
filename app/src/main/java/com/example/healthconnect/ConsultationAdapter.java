@@ -196,7 +196,6 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
         spinnerAppointment.setAdapter(adapter);
 
         // Set the pre-selected appointment
-        Toast.makeText(context, con_datetime.get(position), Toast.LENGTH_LONG).show();
         String currentAppointment = con_datetime.get(position); // Get current appointment for this consultation
         // Find the corresponding formatted date for the currentAppointment ID
 
@@ -267,7 +266,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
 
                         if (isUpdated) {
                             // Update the UI with the new data
-                            con_datetime.set(position, selectedAppointment);
+                            con_datetime.set(position, selectedAppointmentID);
                             con_type.set(position, selectedConsultationType);
                             con_diagnosis.set(position, new_diagnosis);
                             con_treatment.set(position, new_treatment);

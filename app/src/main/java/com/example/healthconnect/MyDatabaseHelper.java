@@ -167,6 +167,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
 
         onCreate(db);
         db.close();
@@ -175,7 +176,59 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void makeThisTable() {
         // Recreate the database and tables
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
+        resetDatabase();
+        String query_user =
+                "CREATE TABLE " + USER_TABLE_NAME + " ( " +
+                        USER_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        USER_COLUMN_USERNAME + " TEXT NOT NULL, " +
+                        USER_COLUMN_USERPASS + " TEXT NOT NULL, " +
+                        USER_COLUMN_USERROLE + " TEXT, " +
+                        USER_COLUMN_EMAIL + " TEXT, " +
+                        USER_COLUMN_FIRSTNAME + " TEXT, " +
+                        USER_COLUMN_LASTNAME + " TEXT, " +
+                        USER_COLUMN_DATEOFBIRTH + " TEXT, " +
+                        USER_COLUMN_DOCTORID + " INTEGER, " +
+                        USER_COLUMN_DATECREATED + " TEXT, " +
+                        USER_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_user);
+
+        String query_patient =
+                "CREATE TABLE " + PATIENT_TABLE + " ( " +
+                        PATIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        PATIENT_COLUMN_USERID + " TEXT NOT NULL, " +
+                        PATIENT_COLUMN_MEDICALHISTORY + " TEXT NOT NULL, " +
+                        PATIENT_COLUMN_DATECREATED + " TEXT, " +
+                        PATIENT_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_patient);
+
+        String query_appointment =
+                "CREATE TABLE " + APPOINTMENT_TABLE + " ( " +
+                        APPOINTMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        APPOINTMENT_COLUMN_PATIENTID + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DOCTORID + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DATETIME + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DESC + " TEXT, " +
+                        APPOINTMENT_COLUMN_STATUS + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_DATECREATED + " TEXT, " +
+                        APPOINTMENT_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_appointment);
+
+        String query_consultation =
+                "CREATE TABLE " + CONSULTATION_TABLE + " ( " +
+                        CONSULTATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        CONSULTATION_COLUMN_APPOINTMENTID + " TEXT NOT NULL, " +
+                        CONSULTATION_COLUMN_TYPE + " TEXT, " +
+                        CONSULTATION_COLUMN_DIAGNOSIS + " TEXT, " +
+                        CONSULTATION_COLUMN_TREATMENT + " TEXT, " +
+                        CONSULTATION_COLUMN_DESC + " TEXT, " +
+                        CONSULTATION_COLUMN_DATECREATED + " TEXT, " +
+                        CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
+                        " );";
+        db.execSQL(query_consultation);
+
         String query_medication =
                 "CREATE TABLE " + MEDICATION_TABLE + " ( " +
                         MEDICATION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
