@@ -196,8 +196,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
         spinnerAppointment.setAdapter(adapter);
 
         // Set the pre-selected appointment
-        String currentAppointment = con_datetime.get(position); // Get current appointment for this consultation
-        // Find the corresponding formatted date for the currentAppointment ID
+        String currentAppointment = con_datetime.get(position);
 
         String currentAppointmentFormatted = null;
         for (Map.Entry<String, String> entry : appointmentMap.entrySet()) {
