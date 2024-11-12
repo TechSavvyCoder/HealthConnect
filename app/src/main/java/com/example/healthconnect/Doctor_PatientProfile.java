@@ -202,6 +202,10 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                 .setTitle("Edit Patient Information")
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
+                    Date currentDate = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    String formattedDate = sdf.format(currentDate);
+
                     // Retrieve the updated information
                     String updatedUsername = editTextUsername.getText().toString();
                     String updatedEmail = editTextEmail.getText().toString();
@@ -218,19 +222,15 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                     }
 
                     // Update the database with the new information
-                    // String result = db.updatePatientInfo(intent_user_id, updatedUsername, updatedEmail, updatedFirstName, updatedLastName, updatedDateOfBirth, updatedDescription);
-                    String result = "success";
+                    Boolean isUpdated = db.updatePatientInfo(intent_user_id, updatedUsername, updatedEmail, updatedFirstName, updatedLastName, updatedDateOfBirth, updatedDescription, formattedDate);
 
-                    if ("success".equals(result)) {
-                        // If the update is successful, show a success message and update the UI
-                        Toast.makeText(Doctor_PatientProfile.this, updatedFirstName + " " + updatedLastName + "'s information has been updated successfully", Toast.LENGTH_SHORT).show();
-
-                        // You might want to update the UI with the new patient data
+                    if (isUpdated) {
                         tv_userFullName.setText(updatedFirstName + " " + updatedLastName);
                         tv_userEmail.setText(updatedEmail);
                         tv_userDesc.setText(updatedDescription);
+
+                        Toast.makeText(Doctor_PatientProfile.this, updatedFirstName + " " + updatedLastName + "'s information has been updated successfully", Toast.LENGTH_SHORT).show();
                     } else {
-                        // If the update failed, show an error message
                         Toast.makeText(Doctor_PatientProfile.this, "Failed to update patient information. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 })

@@ -32,6 +32,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String USER_COLUMN_FIRSTNAME = "user_firstName";
     private static final String USER_COLUMN_LASTNAME = "user_lastName";
     private static final String USER_COLUMN_DATEOFBIRTH = "date_of_birth";
+    private static final String USER_COLUMN_DESC = "user_desc";
     private static final String USER_COLUMN_DOCTORID = "doctor_id";
     private static final String USER_COLUMN_DATECREATED = "date_created";
     private static final String USER_COLUMN_DATEUPDATED = "date_updated";
@@ -93,6 +94,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         USER_COLUMN_FIRSTNAME + " TEXT, " +
                         USER_COLUMN_LASTNAME + " TEXT, " +
                         USER_COLUMN_DATEOFBIRTH + " TEXT, " +
+                        USER_COLUMN_DESC + " TEXT, " +
                         USER_COLUMN_DOCTORID + " INTEGER, " +
                         USER_COLUMN_DATECREATED + " TEXT, " +
                         USER_COLUMN_DATEUPDATED + " TEXT " +
@@ -187,6 +189,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         USER_COLUMN_FIRSTNAME + " TEXT, " +
                         USER_COLUMN_LASTNAME + " TEXT, " +
                         USER_COLUMN_DATEOFBIRTH + " TEXT, " +
+                        USER_COLUMN_DESC + " TEXT, " +
                         USER_COLUMN_DOCTORID + " INTEGER, " +
                         USER_COLUMN_DATECREATED + " TEXT, " +
                         USER_COLUMN_DATEUPDATED + " TEXT " +
@@ -644,6 +647,30 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Function to UPDATE entries
+    public boolean updatePatientInfo(String user_id, String new_username, String new_email, String new_firstName, String new_lastName, String new_dob, String new_desc, String date_updated){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_COLUMN_USERNAME, new_username);  // Update dateTime
+        contentValues.put(USER_COLUMN_EMAIL, new_email);          // Update description
+        contentValues.put(USER_COLUMN_FIRSTNAME, new_firstName); // Update the status field
+        contentValues.put(USER_COLUMN_LASTNAME, new_lastName);
+        contentValues.put(USER_COLUMN_DATEOFBIRTH, new_dob);
+        contentValues.put(USER_COLUMN_DESC, new_desc);
+        contentValues.put(USER_COLUMN_DATEUPDATED, date_updated);
+
+        // Define the condition to update the row (i.e., matching the appointment_id)
+        String selection = USER_COLUMN_ID + " = ?";
+        String[] selectionArgs = { user_id };
+
+        // Perform the update and return whether it was successful
+        int rowsUpdated = db.update(USER_TABLE_NAME, contentValues, selection, selectionArgs);
+
+        db.close();
+
+        return rowsUpdated > 0;
+    }
+
     public boolean updateAppointment(String app_id, String newDateTime, String newDesc, String newStatus, String date_updated) {
         SQLiteDatabase db = this.getWritableDatabase();
 
