@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E4EBF7"
-    tools:context=".Doctor_PatientProfile">
+    tools:context=".Patient_Profile">
 
     <TextView
         android:id="@+id/patientName"
@@ -110,17 +110,17 @@
         app:tabMode="fixed" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAdd"
+        android:id="@+id/btnSignOut"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="@color/primary_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/vector_add_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/vector_logout_24"
         app:tint="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

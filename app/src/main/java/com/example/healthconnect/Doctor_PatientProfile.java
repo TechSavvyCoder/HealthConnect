@@ -39,7 +39,7 @@ public class Doctor_PatientProfile extends AppCompatActivity {
     String intent_user_id;
     MyDatabaseHelper db;
 
-    String user_name, user_fName, user_lName, user_email, user_DOB;
+    String user_name, user_fName, user_lName, user_email, user_DOB, user_desc;
     TextView tv_userName, tv_userFullName, tv_userEmail, tv_userDOB, tv_userDesc;
 
     private TabLayout tabLayout;
@@ -145,6 +145,7 @@ public class Doctor_PatientProfile extends AppCompatActivity {
         user_lName = db.getUserInfo(intent_user_id, "user_lastName");
         user_email = db.getUserInfo(intent_user_id, "user_email");
         user_DOB = db.getUserInfo(intent_user_id, "date_of_birth");
+        user_desc = db.getUserInfo(intent_user_id, "user_desc");
     }
 
     private void loadFragment(Fragment fragment) {
@@ -179,7 +180,7 @@ public class Doctor_PatientProfile extends AppCompatActivity {
         editTextFirstName.setText(user_fName);
         editTextLastName.setText(user_lName);
         editTextDateOfBirth.setText(user_DOB); // Assuming user_DOB contains the date of birth
-        editTextDescription.setText(""); // You might want to populate this if you have a description for the patient
+        editTextDescription.setText(user_desc); // You might want to populate this if you have a description for the patient
 
         // Handle the DatePicker for Date of Birth field
         editTextDateOfBirth.setOnClickListener(v -> {
@@ -238,7 +239,6 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                 .create()
                 .show();
     }
-
 
     private void showOptionsDialog() {
         String[] options = {"Consultation", "Medication", "Appointment"};

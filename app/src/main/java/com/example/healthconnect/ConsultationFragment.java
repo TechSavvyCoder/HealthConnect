@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ConsultationFragment extends Fragment {
 
     private SessionManager sessionManager;
-    String loggedDoctorID;
+    String loggedInUserRole, loggedID;
     private RecyclerView recyclerView;
     private ConsultationAdapter consultationAdapter;
 
@@ -30,7 +30,9 @@ public class ConsultationFragment extends Fragment {
     TextView noConsultationsMessage;
 
     // Variables to store patient info
-    String patient_id_from_bundle;
+    String id_from_bundle;
+
+    View view;
 
     public ConsultationFragment() {
         // Required empty public constructor
@@ -39,31 +41,58 @@ public class ConsultationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sessionManager = new SessionManager(getContext());
-        loggedDoctorID = sessionManager.getUserId();
+        loggedInUserRole = sessionManager.getUserRole();
+        loggedID = sessionManager.getUserId();
 
-        View view = inflater.inflate(R.layout.fragment_consultation, container, false);
+        if (loggedInUserRole.equals("Doctor")) {
+            view = inflater.inflate(R.layout.fragment_consultation, container, false);
 
-        myDB = new MyDatabaseHelper(getContext());
-        con_id = new ArrayList<>();
-        con_datetime = new ArrayList<>();
-        con_type = new ArrayList<>();
-        con_diagnosis = new ArrayList<>();
-        con_treatment = new ArrayList<>();
-        con_desc = new ArrayList<>();
+            myDB = new MyDatabaseHelper(getContext());
+            con_id = new ArrayList<>();
+            con_datetime = new ArrayList<>();
+            con_type = new ArrayList<>();
+            con_diagnosis = new ArrayList<>();
+            con_treatment = new ArrayList<>();
+            con_desc = new ArrayList<>();
 
-        noConsultationsMessage = view.findViewById(R.id.noConsultationsMessage);
-        recyclerView = view.findViewById(R.id.rvConsultationList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            noConsultationsMessage = view.findViewById(R.id.noConsultationsMessage);
+            recyclerView = view.findViewById(R.id.rvConsultationList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Retrieve patient info from the arguments
-        if (getArguments() != null) {
-            patient_id_from_bundle = getArguments().getString("patient_id");
+            // Retrieve patient info from the arguments
+            if (getArguments() != null) {
+                id_from_bundle = getArguments().getString("patient_id");
+            }
+
+            storeDataInArray(loggedID, id_from_bundle);
+
+            consultationAdapter = new ConsultationAdapter(getContext(), con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc, loggedID, id_from_bundle);
+            recyclerView.setAdapter(consultationAdapter);
+        } else {
+            view = inflater.inflate(R.layout.fragment_consultation, container, false);
+
+            myDB = new MyDatabaseHelper(getContext());
+            con_id = new ArrayList<>();
+            con_datetime = new ArrayList<>();
+            con_type = new ArrayList<>();
+            con_diagnosis = new ArrayList<>();
+            con_treatment = new ArrayList<>();
+            con_desc = new ArrayList<>();
+
+            noConsultationsMessage = view.findViewById(R.id.noConsultationsMessage);
+            recyclerView = view.findViewById(R.id.rvConsultationList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            // Retrieve patient info from the arguments
+            if (getArguments() != null) {
+                id_from_bundle = getArguments().getString("doctor_id");
+            }
+
+            storeDataInArray(id_from_bundle, loggedID);
+
+            consultationAdapter = new ConsultationAdapter(getContext(), con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc, id_from_bundle, loggedID);
+            recyclerView.setAdapter(consultationAdapter);
         }
-
-        storeDataInArray(loggedDoctorID, patient_id_from_bundle);
-
-        consultationAdapter = new ConsultationAdapter(getContext(), con_id, con_datetime, con_type, con_diagnosis, con_treatment, con_desc, loggedDoctorID, patient_id_from_bundle);
-        recyclerView.setAdapter(consultationAdapter);
 
         return view;
     }

@@ -48,13 +48,18 @@ public class LoginActivity extends AppCompatActivity {
                     String loggedInUserRole = sessionManager.getUserRole();
 
                     // User exists, proceed to Home Activity
-                    if(loggedInUserRole.equals("Doctor")){
+                    if(loggedInUserRole.equals("Doctor")) {
                         Intent intent = new Intent(LoginActivity.this, Doctor_PatientListActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
                         startActivity(intent);
                         finish();
+                    } else if(loggedInUserRole.equals("Patient")) {
+                        Intent intent = new Intent(LoginActivity.this, Patient_Profile.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
+                        startActivity(intent);
+                        finish();
                     } else {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
                         startActivity(intent);
                         finish();

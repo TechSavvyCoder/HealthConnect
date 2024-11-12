@@ -53,7 +53,7 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
     @Override
     public ConsultationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.row_consultation, parent, false);
-        return new ConsultationAdapter.ConsultationViewHolder(view);
+        return new ConsultationAdapter.ConsultationViewHolder(view, context);
     }
 
     @Override
@@ -90,19 +90,29 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
     }
 
     public static class ConsultationViewHolder extends RecyclerView.ViewHolder {
+        Context context;
         TextView tvConDateTime, tvConType, tvConDiagnosis, tvConTreatment, tvConDesc;
         Button btnEdit, btnDelete;
 
-        public ConsultationViewHolder(View itemView) {
+        public ConsultationViewHolder(View itemView, Context context) {
             super(itemView);
+            this.context = context;
             tvConDateTime = itemView.findViewById(R.id.tvConDateTime);
             tvConType = itemView.findViewById(R.id.tvConType);
             tvConDiagnosis = itemView.findViewById(R.id.tvConDiagnosis);
             tvConTreatment = itemView.findViewById(R.id.tvConTreatment);
             tvConDesc = itemView.findViewById(R.id.tvConDesc);
 
+            SessionManager sessionManager = new SessionManager(context);
+            String loggedInUserRole = sessionManager.getUserRole();
+
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+
+            if (loggedInUserRole.equals("Patient")) {
+                btnEdit.setVisibility(View.GONE);
+                btnDelete.setVisibility(View.GONE);
+            }
         }
     }
 
