@@ -47,7 +47,8 @@
     <string name="btnAddPatient">Submit</string>
 
     <!-- Profile -->
-    <string name="txtDescription">Description</string>
+    <string name="txtDescription">Notes:</string>
+    <string name="txtDescriptionValue">Doctors notes</string>
 
     <!-- Appointment -->
     <string-array name="appointment_status_array">

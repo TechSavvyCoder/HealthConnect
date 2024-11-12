@@ -24,6 +24,7 @@
 
 
     <LinearLayout
+        android:id="@+id/editProfileLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -33,9 +34,6 @@
         app:layout_constraintStart_toEndOf="@+id/patientName"
         app:layout_constraintTop_toTopOf="@+id/patientName">
 
-        <!-- TextView displaying 'Edit' -->
-
-        <!-- ImageView displaying the edit icon (pencil icon) -->
         <TextView
             android:id="@+id/txtEditBtn"
             android:layout_width="wrap_content"
@@ -82,8 +80,9 @@
         android:layout_width="372dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        android:text="@string/txtDescriptionValue"
         android:textSize="16sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/txtDescription"

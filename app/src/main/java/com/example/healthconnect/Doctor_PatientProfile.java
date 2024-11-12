@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ public class Doctor_PatientProfile extends AppCompatActivity {
     MyDatabaseHelper db;
 
     String user_name, user_fName, user_lName, user_email, user_DOB;
-    TextView tv_userName, tv_userFullName, tv_userEmail, tv_userDOB;
+    TextView tv_userName, tv_userFullName, tv_userEmail, tv_userDOB, tv_userDesc;
 
     private TabLayout tabLayout;
     FloatingActionButton btnAdd;
@@ -64,6 +67,7 @@ public class Doctor_PatientProfile extends AppCompatActivity {
 
             tv_userFullName = findViewById(R.id.patientName);
             tv_userEmail = findViewById(R.id.patientEmail);
+            tv_userDesc = findViewById(R.id.patientDescription);
 
             tv_userFullName.setText(user_fName + " " + user_lName);
             tv_userEmail.setText(user_email);
@@ -104,8 +108,6 @@ public class Doctor_PatientProfile extends AppCompatActivity {
             });
 
             btnAdd = findViewById(R.id.btnAdd);
-
-            // Set up the FAB click listener
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -113,6 +115,19 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                     showOptionsDialog();
                 }
             });
+
+            LinearLayout editLayout = findViewById(R.id.editProfileLayout);
+            TextView txtEditBtn = findViewById(R.id.txtEditBtn);
+            ImageView editIcon = findViewById(R.id.editIcon);
+
+            View.OnClickListener editClickListener = v -> {
+                showEditPatientInfoDialog();
+            };
+
+            txtEditBtn.setOnClickListener(editClickListener);
+            editIcon.setOnClickListener(editClickListener);
+            editLayout.setOnClickListener(editClickListener);
+
         } else {
             Intent intent = new Intent(Doctor_PatientProfile.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
@@ -146,6 +161,85 @@ public class Doctor_PatientProfile extends AppCompatActivity {
     }
 
     // Method to show the options dialog
+    private void showEditPatientInfoDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.doctor_edit_patient_profile, null);
+
+        // Initialize the TextInputEditText views
+        TextInputEditText editTextUsername = dialogView.findViewById(R.id.editTextUsername);
+        TextInputEditText editTextEmail = dialogView.findViewById(R.id.editTextEmail);
+        TextInputEditText editTextFirstName = dialogView.findViewById(R.id.editTextFirstName);
+        TextInputEditText editTextLastName = dialogView.findViewById(R.id.editTextLastName);
+        TextInputEditText editTextDateOfBirth = dialogView.findViewById(R.id.editTextDateOfBirth);
+        TextInputEditText editTextDescription = dialogView.findViewById(R.id.editTextDescription);
+
+        // Set the current patient data into the fields
+        editTextUsername.setText(user_name); // Assuming user_name contains the username
+        editTextEmail.setText(user_email);
+        editTextFirstName.setText(user_fName);
+        editTextLastName.setText(user_lName);
+        editTextDateOfBirth.setText(user_DOB); // Assuming user_DOB contains the date of birth
+        editTextDescription.setText(""); // You might want to populate this if you have a description for the patient
+
+        // Handle the DatePicker for Date of Birth field
+        editTextDateOfBirth.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(Doctor_PatientProfile.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        // Format the month and day with leading zeros if needed
+                        String formattedDate = String.format("%04d/%02d/%02d", selectedYear, selectedMonth + 1, selectedDay);
+                        editTextDateOfBirth.setText(formattedDate); // Set selected date as DOB
+                    }, year, month, dayOfMonth);
+            datePickerDialog.show();
+        });
+
+        // Create the AlertDialog and set up the Save button to handle user input
+        new AlertDialog.Builder(Doctor_PatientProfile.this)
+                .setTitle("Edit Patient Information")
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // Retrieve the updated information
+                    String updatedUsername = editTextUsername.getText().toString();
+                    String updatedEmail = editTextEmail.getText().toString();
+                    String updatedFirstName = editTextFirstName.getText().toString();
+                    String updatedLastName = editTextLastName.getText().toString();
+                    String updatedDateOfBirth = editTextDateOfBirth.getText().toString();
+                    String updatedDescription = editTextDescription.getText().toString();
+
+                    // Validate the input fields
+                    if (updatedUsername.isEmpty() || updatedEmail.isEmpty() || updatedFirstName.isEmpty() ||
+                            updatedLastName.isEmpty() || updatedDateOfBirth.isEmpty()) {
+                        Toast.makeText(Doctor_PatientProfile.this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Update the database with the new information
+                    // String result = db.updatePatientInfo(intent_user_id, updatedUsername, updatedEmail, updatedFirstName, updatedLastName, updatedDateOfBirth, updatedDescription);
+                    String result = "success";
+
+                    if ("success".equals(result)) {
+                        // If the update is successful, show a success message and update the UI
+                        Toast.makeText(Doctor_PatientProfile.this, updatedFirstName + " " + updatedLastName + "'s information has been updated successfully", Toast.LENGTH_SHORT).show();
+
+                        // You might want to update the UI with the new patient data
+                        tv_userFullName.setText(updatedFirstName + " " + updatedLastName);
+                        tv_userEmail.setText(updatedEmail);
+                        tv_userDesc.setText(updatedDescription);
+                    } else {
+                        // If the update failed, show an error message
+                        Toast.makeText(Doctor_PatientProfile.this, "Failed to update patient information. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+
     private void showOptionsDialog() {
         String[] options = {"Consultation", "Medication", "Appointment"};
 
@@ -462,5 +556,4 @@ public class Doctor_PatientProfile extends AppCompatActivity {
                 .create()
                 .show();
     }
-
 }
