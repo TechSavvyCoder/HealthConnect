@@ -35,6 +35,9 @@
     <string name="txt_userDateOfBirthHint">Enter your Birthdate</string>
 
     <!-- Home Doctor -->
+    <string name="txtHiUser">Hi, User!</string>
+    <string name="txtBtnPatient">Patients</string>
+    <string name="txtBtnAppointment">Appointments</string>
     <string name="txtSearchHint">Search Patient here..</string>
 
     <!-- Add new patient -->

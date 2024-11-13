@@ -39,9 +39,6 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_patient_list);
 
-        // Hide the ActionBar
-        getSupportActionBar().hide();
-
         // Initialize the session manager
         sessionManager = new SessionManager(this);
 
@@ -49,9 +46,6 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
         if (sessionManager.isSessionActive()) {
             loggedInUserID = sessionManager.getUserId();
             loggedInUserName = sessionManager.getUserFirstName() + " " + sessionManager.getUserLastName();
-
-            TextView tvLoggedUser= findViewById(R.id.tvLoggedUser);
-            tvLoggedUser.setText("Hi, " + loggedInUserName + "!");
 
             searchPatient = findViewById(R.id.searchView);
             searchPatient.clearFocus();

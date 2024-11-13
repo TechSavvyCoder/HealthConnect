@@ -8,29 +8,16 @@
     android:background="@drawable/splash_bg"
     tools:context=".Doctor_PatientListActivity">
 
-    <TextView
-        android:id="@+id/tvLoggedUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Hi, User!"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.066"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="379dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/in_search"
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLoggedUser"
+        app:layout_constraintTop_toTopOf="parent"
         app:queryHint="@string/txtSearchHint" />
 
     <androidx.recyclerview.widget.RecyclerView

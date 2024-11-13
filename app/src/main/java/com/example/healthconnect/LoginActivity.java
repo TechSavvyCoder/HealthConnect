@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // User exists, proceed to Home Activity
                     if(loggedInUserRole.equals("Doctor")) {
-                        Intent intent = new Intent(LoginActivity.this, Doctor_PatientListActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // This will clear the activity stack
                         startActivity(intent);
                         finish();

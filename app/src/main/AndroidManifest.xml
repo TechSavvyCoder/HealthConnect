@@ -16,13 +16,6 @@
             android:name=".Patient_Profile"
             android:exported="false" />
         <activity
-            android:name=".Doctor_AddPatientAppointment"
-            android:exported="false"
-            android:label="Add New Appointment" />
-        <activity
-            android:name=".Doctor_AddPatientConsultation"
-            android:exported="false" />
-        <activity
             android:name=".Doctor_PatientProfile"
             android:exported="false"
             android:label="Patient Profile"
@@ -35,7 +28,8 @@
         <activity
             android:name=".Doctor_PatientListActivity"
             android:exported="false"
-            android:label="Patients" />
+            android:label="Patients"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false"
@@ -66,7 +60,8 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="Home" />
     </application>
 
 </manifest>

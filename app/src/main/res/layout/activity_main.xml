@@ -1,20 +1,129 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_bg"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/test"
+        android:id="@+id/tvLoggedUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="188dp"
-        android:text="TextView"
+        android:layout_marginTop="24dp"
+        android:text="@string/txtHiUser"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnSignOut"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/primary_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/vector_logout_24"
+        app:tint="@android:color/white" />
+
+    <GridLayout
+        android:id="@+id/grid_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:columnCount="2"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLoggedUser">
+
+        <!-- Button 1: Patients -->
+        <RelativeLayout
+            android:id="@+id/btn_patients"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/fancy_button_bg"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/text_patients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/txtBtnPatient"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_patients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_patients"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/badge_bg"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="10"
+                android:textColor="@color/blue"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <!-- Button 2: Appointments -->
+        <RelativeLayout
+            android:id="@+id/button_appointments"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/fancy_button_bg"
+            android:elevation="4dp"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/text_appointments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/txtBtnAppointment"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/badge_appointments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_appointments"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/badge_bg"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="20"
+                android:textColor="@color/blue"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </GridLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
