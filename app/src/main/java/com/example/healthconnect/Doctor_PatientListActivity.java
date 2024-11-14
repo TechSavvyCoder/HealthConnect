@@ -1,6 +1,7 @@
 package com.example.healthconnect;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,11 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     String loggedInUserID, loggedInUserName;
+
+    private static final String PREFS_NAME = "OnboardingProcedures";
+    private static final String KEY_IS_FIRST_RUN = "isFirstRun";
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private static final String KEY_USER_ROLE = "userRole";
 
     RecyclerView rvPatientList;
     FloatingActionButton btnAdd, btnSignOut;
@@ -146,6 +152,14 @@ public class Doctor_PatientListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Clear the current user session
                 sessionManager.clearSession();
+
+                // Initialize SharedPreferences to set login status
+                SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                editor.putBoolean(KEY_IS_LOGGED_IN, false);
+                editor.putString(KEY_USER_ROLE, "");
+                editor.apply();
 
                 // Redirect to LoginActivity
                 Intent intent = new Intent(Doctor_PatientListActivity.this, OnboardingStep3Activity.class);
