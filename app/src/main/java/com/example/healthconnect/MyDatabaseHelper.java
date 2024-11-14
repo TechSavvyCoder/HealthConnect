@@ -37,14 +37,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String USER_COLUMN_DATECREATED = "date_created";
     private static final String USER_COLUMN_DATEUPDATED = "date_updated";
 
-    // Patient Table
-    private static final String PATIENT_TABLE = "patient";
-    private static final String PATIENT_COLUMN_ID = "patient_id";
-    private static final String PATIENT_COLUMN_USERID = "user_id";
-    private static final String PATIENT_COLUMN_MEDICALHISTORY = "medical_history";
-    private static final String PATIENT_COLUMN_DATECREATED = "date_created";
-    private static final String PATIENT_COLUMN_DATEUPDATED = "date_updated";
-
     // Appointment Table
     private static final String APPOINTMENT_TABLE = "appointment";
     private static final String APPOINTMENT_COLUMN_ID = "appointment_id";
@@ -101,16 +93,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         " );";
         db.execSQL(query_user);
 
-        String query_patient =
-                "CREATE TABLE " + PATIENT_TABLE + " ( " +
-                        PATIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        PATIENT_COLUMN_USERID + " TEXT NOT NULL, " +
-                        PATIENT_COLUMN_MEDICALHISTORY + " TEXT NOT NULL, " +
-                        PATIENT_COLUMN_DATECREATED + " TEXT, " +
-                        PATIENT_COLUMN_DATEUPDATED + " TEXT " +
-                        " );";
-        db.execSQL(query_patient);
-
         String query_appointment =
                 "CREATE TABLE " + APPOINTMENT_TABLE + " ( " +
                         APPOINTMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -154,9 +136,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
         onCreate(db);
     }
 
@@ -166,7 +148,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + PATIENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
@@ -195,16 +176,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         USER_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
         db.execSQL(query_user);
-
-        String query_patient =
-                "CREATE TABLE " + PATIENT_TABLE + " ( " +
-                        PATIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        PATIENT_COLUMN_USERID + " TEXT NOT NULL, " +
-                        PATIENT_COLUMN_MEDICALHISTORY + " TEXT NOT NULL, " +
-                        PATIENT_COLUMN_DATECREATED + " TEXT, " +
-                        PATIENT_COLUMN_DATEUPDATED + " TEXT " +
-                        " );";
-        db.execSQL(query_patient);
 
         String query_appointment =
                 "CREATE TABLE " + APPOINTMENT_TABLE + " ( " +
