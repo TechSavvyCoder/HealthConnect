@@ -36,6 +36,7 @@
 
     <!-- Home Doctor -->
     <string name="txtHiUser">Hi, User!</string>
+    <string name="txtWelcome">Welcome Back</string>
     <string name="txtBtnPatient">Patients</string>
     <string name="txtBtnAppointment">Appointments</string>
     <string name="txtSearchHint">Search Patient here..</string>
