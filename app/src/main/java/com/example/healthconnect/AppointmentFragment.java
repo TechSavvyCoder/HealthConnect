@@ -30,7 +30,6 @@ public class AppointmentFragment extends Fragment {
     String patient_id_from_bundle;
 
     public AppointmentFragment() {
-        // Required empty public constructor
     }
 
     @Override

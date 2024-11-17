@@ -140,7 +140,6 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             app_status.remove(position);
             notifyItemRemoved(position);
 
-            // Optionally, you can show a toast message
             Toast.makeText(context, "Appointment deleted successfully", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Failed to delete appointment", Toast.LENGTH_SHORT).show();

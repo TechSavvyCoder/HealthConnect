@@ -35,7 +35,6 @@ public class ConsultationFragment extends Fragment {
     View view;
 
     public ConsultationFragment() {
-        // Required empty public constructor
     }
 
     @Override

@@ -147,7 +147,6 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
             con_desc.remove(position);
             notifyItemRemoved(position);
 
-            // Optionally, you can show a toast message
             Toast.makeText(context, "Entry has been deleted successfully", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Failed to delete this entry", Toast.LENGTH_SHORT).show();
@@ -271,7 +270,6 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
 
                         // Update the appointment in the database
                         boolean isUpdated = myDB.updateConsultation(con_id.get(position), selectedAppointmentID, selectedConsultationType, new_diagnosis, new_treatment, new_desc, formattedDate);
-//                        boolean isUpdated = false;
 
                         if (isUpdated) {
                             // Update the UI with the new data

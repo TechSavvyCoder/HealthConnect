@@ -30,7 +30,6 @@ public class MedicationFragment extends Fragment {
     String patient_id_from_bundle;
 
     public MedicationFragment() {
-        // Required empty public constructor
     }
 
     @Override
