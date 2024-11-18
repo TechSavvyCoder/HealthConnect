@@ -89,7 +89,6 @@ public class Patient_Profile extends AppCompatActivity {
                 tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        // Based on the selected tab, load the respective fragment
                         switch (tab.getPosition()) {
                             case 0:
                                 loadFragment(new ConsultationFragment());
@@ -109,7 +108,6 @@ public class Patient_Profile extends AppCompatActivity {
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {}
                 });
-
 
                 signOut();
 

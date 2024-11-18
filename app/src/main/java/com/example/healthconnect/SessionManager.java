@@ -9,7 +9,6 @@ public class SessionManager {
     private SharedPreferences.Editor editor;
     private Context context;
 
-    // Shared Preferences file name
     private static final String PREF_NAME = "UserSession";
 
     // Key names for user data in SharedPreferences

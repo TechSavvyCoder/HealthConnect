@@ -26,7 +26,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         // SharedPreferences instance
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        // Check if it's the first run
         boolean isFirstRun = preferences.getBoolean(KEY_IS_FIRST_RUN, true);
         boolean isLoggedIn = preferences.getBoolean(KEY_IS_LOGGED_IN, false);
         String userRole = preferences.getString(KEY_USER_ROLE, "");
@@ -56,7 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
                     }
                 }
-                finish(); // Close the SplashScreenActivity
+                finish();
             }
         };
 
@@ -72,7 +71,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void resetSession() {
-        // Initialize SharedPreferences to set login status
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
