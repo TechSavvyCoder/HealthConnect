@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     String loggedInUserID, loggedInUserName;
+    MyDatabaseHelper dbHelper = new MyDatabaseHelper(this);
 
     private static final String PREFS_NAME = "OnboardingProcedures";
     private static final String KEY_IS_FIRST_RUN = "isFirstRun";
@@ -70,6 +71,19 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Appointments button clicked!", Toast.LENGTH_SHORT).show();
                 }
             });
+
+            TextView txtBadgePatients = findViewById(R.id.badge_patients);
+            TextView txtBadgePendingApp = findViewById(R.id.badge_appointments);
+            TextView txtBadgeCompletedApp = findViewById(R.id.badge_completed);
+            TextView txtBadgeCancelledApp = findViewById(R.id.badge_cancelled);
+            TextView txtBadgeNoShow = findViewById(R.id.badge_no_show);
+
+            txtBadgePatients.setText(""+dbHelper.countAllPatients(loggedInUserID));
+            txtBadgePendingApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Pending"));
+            txtBadgeCompletedApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Completed"));
+            txtBadgeCancelledApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Cancelled"));
+            txtBadgeNoShow.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "No Show"));
+
         } else {
             // Redirect to LoginActivity if no session is active
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);

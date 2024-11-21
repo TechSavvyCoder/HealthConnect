@@ -378,6 +378,22 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public int countAllPatients(String doctor_ID){
+        String query = "SELECT count(*) FROM " + USER_TABLE_NAME +
+                " WHERE " + USER_COLUMN_DOCTORID + " = ? ";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        int result = 0;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, new String[]{doctor_ID});
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getInt(0); // Get the count from the first column
+            }
+        }
+        return result;
+    }
+
     public Cursor getAllAppointments(String doctor_ID, String curr_Patient_ID) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + APPOINTMENT_TABLE +
@@ -522,6 +538,34 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         } else {
             return null;
         }
+    }
+
+    public int countAllAppointmentsByStatus(String doctor_ID, String status){
+        String query = "SELECT count(*) FROM " + APPOINTMENT_TABLE +
+                " WHERE doctor_id = ? AND " + APPOINTMENT_COLUMN_STATUS + " = ?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        int result = 0;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, new String[]{doctor_ID, status});
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getInt(0); // Get the count from the first column
+            }
+        }
+        return result;
+    }
+
+    public Cursor getAllAppointmentsByStatus(String doctor_ID, String status){
+        String query = "SELECT * FROM " + APPOINTMENT_TABLE + " " +
+                "WHERE doctor_id = " + doctor_ID + " AND " + APPOINTMENT_COLUMN_STATUS + " = " + status;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        if(db != null){
+            cursor = db.rawQuery(query, null);
+        }
+        return cursor;
     }
 
     public String getConsultationInfoByID(String med_id, String colname) {

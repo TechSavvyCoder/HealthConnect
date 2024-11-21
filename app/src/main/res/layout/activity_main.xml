@@ -87,7 +87,7 @@
                 android:background="@drawable/badge_bg"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="10"
+                android:text="0"
                 android:textColor="@color/blue"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -231,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="Canceled"
+                android:text="Cancelled"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
