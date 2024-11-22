@@ -216,7 +216,7 @@
 
         <!-- Canceled Button -->
         <RelativeLayout
-            android:id="@+id/btn_cancelled"
+            android:id="@+id/btn_canceled"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -231,13 +231,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="Cancelled"
+                android:text="Canceled"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/badge_cancelled"
+                android:id="@+id/badge_canceled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_canceled"

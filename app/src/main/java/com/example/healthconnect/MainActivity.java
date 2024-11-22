@@ -63,25 +63,49 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            // Reference to the 'Appointments' button
+            // Reference to the buttons
             View buttonAppointments = findViewById(R.id.button_appointments);
             buttonAppointments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "Appointments button clicked!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Coming soon...", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            View buttonCompleted = findViewById(R.id.btn_completed);
+            buttonCompleted.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, "Coming soon...", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            View buttonCancelled = findViewById(R.id.btn_canceled);
+            buttonCancelled.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, "Coming soon...", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            View buttonNoShow = findViewById(R.id.btn_no_show);
+            buttonNoShow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, "Coming soon...", Toast.LENGTH_SHORT).show();
                 }
             });
 
             TextView txtBadgePatients = findViewById(R.id.badge_patients);
             TextView txtBadgePendingApp = findViewById(R.id.badge_appointments);
             TextView txtBadgeCompletedApp = findViewById(R.id.badge_completed);
-            TextView txtBadgeCancelledApp = findViewById(R.id.badge_cancelled);
+            TextView txtBadgeCanceledApp = findViewById(R.id.badge_canceled);
             TextView txtBadgeNoShow = findViewById(R.id.badge_no_show);
 
             txtBadgePatients.setText(""+dbHelper.countAllPatients(loggedInUserID));
             txtBadgePendingApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Pending"));
             txtBadgeCompletedApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Completed"));
-            txtBadgeCancelledApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Cancelled"));
+            txtBadgeCanceledApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Canceled"));
             txtBadgeNoShow.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "No Show"));
 
         } else {
