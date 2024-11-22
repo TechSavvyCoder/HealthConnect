@@ -102,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
             TextView txtBadgeCanceledApp = findViewById(R.id.badge_canceled);
             TextView txtBadgeNoShow = findViewById(R.id.badge_no_show);
 
-            txtBadgePatients.setText(""+dbHelper.countAllPatients(loggedInUserID));
-            txtBadgePendingApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Pending"));
-            txtBadgeCompletedApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Completed"));
-            txtBadgeCanceledApp.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Canceled"));
-            txtBadgeNoShow.setText(""+dbHelper.countAllAppointmentsByStatus(loggedInUserID, "No Show"));
+            txtBadgePatients.setText(String.valueOf(dbHelper.countAllPatients(loggedInUserID)));
+            txtBadgePendingApp.setText(String.valueOf(dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Pending")));
+            txtBadgeCompletedApp.setText(String.valueOf(dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Completed")));
+            txtBadgeCanceledApp.setText(String.valueOf(dbHelper.countAllAppointmentsByStatus(loggedInUserID, "Canceled")));
+            txtBadgeNoShow.setText(String.valueOf(dbHelper.countAllAppointmentsByStatus(loggedInUserID, "No Show")));
 
         } else {
             // Redirect to LoginActivity if no session is active
