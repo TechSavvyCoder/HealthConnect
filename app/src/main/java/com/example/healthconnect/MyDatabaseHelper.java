@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
@@ -392,6 +393,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return result;
+    }
+
+    public List<String> getAllAppointmentsPerDoctor(String doctor_ID) {
+        List<String> dates = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + APPOINTMENT_COLUMN_DATETIME + " FROM " + APPOINTMENT_TABLE +
+                " WHERE " + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                " ORDER BY " + APPOINTMENT_COLUMN_DATETIME + " ASC";
+        Cursor cursor = db.rawQuery(query, new String[]{doctor_ID});
+
+        if (cursor.moveToFirst()) {
+            do {
+                dates.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return dates;
     }
 
     public Cursor getAllAppointments(String doctor_ID, String curr_Patient_ID) {

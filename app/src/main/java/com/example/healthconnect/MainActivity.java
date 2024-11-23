@@ -1,7 +1,12 @@
 package com.example.healthconnect;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
             TextView tvLoggedUser= findViewById(R.id.tvLoggedUser);
             tvLoggedUser.setText("Hi, " + loggedInUserName + "!");
+
+            // Start the MatchTime service
+            Intent serviceIntent = new Intent(this, Notification.class);
+            startService(serviceIntent);
 
             signOut();
 
