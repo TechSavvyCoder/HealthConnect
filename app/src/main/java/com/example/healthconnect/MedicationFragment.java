@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class MedicationFragment extends Fragment {
 
     private SessionManager sessionManager;
-    String loggedDoctorID;
+    String loggedInUserRole, loggedID;
     private RecyclerView recyclerView;
     private MedicationAdapter medicationAdapter;
 
@@ -29,37 +29,67 @@ public class MedicationFragment extends Fragment {
     // Variables to store patient info
     String patient_id_from_bundle;
 
+    View view;
+
     public MedicationFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sessionManager = new SessionManager(getContext());
-        loggedDoctorID = sessionManager.getUserId();
+        loggedInUserRole = sessionManager.getUserRole();
+        loggedID = sessionManager.getUserId();
 
-        View view = inflater.inflate(R.layout.fragment_medication, container, false);
+        if (loggedInUserRole.equals("Doctor")) {
+            view = inflater.inflate(R.layout.fragment_medication, container, false);
 
-        myDB = new MyDatabaseHelper(getContext());
-        med_id = new ArrayList<>();
-        med_dateConsulted = new ArrayList<>();
-        med_dosage = new ArrayList<>();
-        med_frequency = new ArrayList<>();
-        med_duration = new ArrayList<>();
-        med_desc = new ArrayList<>();
+            myDB = new MyDatabaseHelper(getContext());
+            med_id = new ArrayList<>();
+            med_dateConsulted = new ArrayList<>();
+            med_dosage = new ArrayList<>();
+            med_frequency = new ArrayList<>();
+            med_duration = new ArrayList<>();
+            med_desc = new ArrayList<>();
 
-        noMedicationsMessage = view.findViewById(R.id.noMedicationsMessage);
-        recyclerView = view.findViewById(R.id.rvMedicationList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            noMedicationsMessage = view.findViewById(R.id.noMedicationsMessage);
+            recyclerView = view.findViewById(R.id.rvMedicationList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Retrieve patient info from the arguments
-        if (getArguments() != null) {
-            patient_id_from_bundle = getArguments().getString("patient_id");
+            // Retrieve patient info from the arguments
+            if (getArguments() != null) {
+                patient_id_from_bundle = getArguments().getString("patient_id");
+            }
+
+            storeDataInArray(loggedID, patient_id_from_bundle);
+
+            medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc);
+            recyclerView.setAdapter(medicationAdapter);
+        } else {
+            view = inflater.inflate(R.layout.fragment_medication, container, false);
+
+            myDB = new MyDatabaseHelper(getContext());
+            med_id = new ArrayList<>();
+            med_dateConsulted = new ArrayList<>();
+            med_dosage = new ArrayList<>();
+            med_frequency = new ArrayList<>();
+            med_duration = new ArrayList<>();
+            med_desc = new ArrayList<>();
+
+            noMedicationsMessage = view.findViewById(R.id.noMedicationsMessage);
+            recyclerView = view.findViewById(R.id.rvMedicationList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            // Retrieve patient info from the arguments
+            if (getArguments() != null) {
+                patient_id_from_bundle = getArguments().getString("doctor_id");
+            }
+
+            storeDataInArray(patient_id_from_bundle, loggedID);
+
+            medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc);
+            recyclerView.setAdapter(medicationAdapter);
+
         }
-
-        storeDataInArray(loggedDoctorID, patient_id_from_bundle);
-
-        medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc);
-        recyclerView.setAdapter(medicationAdapter);
 
         return view;
     }

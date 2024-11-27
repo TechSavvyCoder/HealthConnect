@@ -39,7 +39,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
     @Override
     public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.row_medication, parent, false);
-        return new MedicationAdapter.MedicationViewHolder(view);
+        return new MedicationAdapter.MedicationViewHolder(view, context);
     }
 
     @Override
@@ -77,9 +77,9 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
     public static class MedicationViewHolder extends RecyclerView.ViewHolder {
         TextView tvMedDateConsulted, tvMedDesc, tvMedDosage, tvMedFrequency, tvMedDuration;
-        Button btnDelete;
+        Button btnEdit, btnDelete;
 
-        public MedicationViewHolder(View itemView) {
+        public MedicationViewHolder(View itemView, Context context) {
             super(itemView);
             tvMedDateConsulted = itemView.findViewById(R.id.tvMedDateConsulted);
             tvMedDosage = itemView.findViewById(R.id.tvMedDosage);
@@ -88,6 +88,15 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             tvMedDesc = itemView.findViewById(R.id.tvMedDesc);
 
             btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
+
+            SessionManager sessionManager = new SessionManager(context);
+            String loggedInUserRole = sessionManager.getUserRole();
+
+            if (loggedInUserRole.equals("Patient")) {
+                btnEdit.setVisibility(View.GONE);
+                btnDelete.setVisibility(View.GONE);
+            }
         }
     }
 
