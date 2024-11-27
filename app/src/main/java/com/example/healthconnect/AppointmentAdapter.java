@@ -45,7 +45,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     @Override
     public AppointmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.row_appointment, parent, false);
-        return new AppointmentViewHolder(view);
+        return new AppointmentViewHolder(view, context);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         TextView tv_appDateTime, tv_appStatusValue, tv_appDesc;
         Button btnEdit, btnDelete;
 
-        public AppointmentViewHolder(View itemView) {
+        public AppointmentViewHolder(View itemView, Context context) {
             super(itemView);
             tv_appDateTime = itemView.findViewById(R.id.tvAppDateTime);
             tv_appStatusValue = itemView.findViewById(R.id.tvAppStatusValue);
@@ -106,6 +106,14 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
             btnDelete = itemView.findViewById(R.id.btnDelete);
             btnEdit = itemView.findViewById(R.id.btnEdit);
+
+            SessionManager sessionManager = new SessionManager(context);
+            String loggedInUserRole = sessionManager.getUserRole();
+
+            if (loggedInUserRole.equals("Patient")) {
+                btnEdit.setVisibility(View.GONE);
+                btnDelete.setVisibility(View.GONE);
+            }
         }
     }
 

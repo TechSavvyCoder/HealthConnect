@@ -103,11 +103,11 @@ public class ConsultationAdapter extends RecyclerView.Adapter<ConsultationAdapte
             tvConTreatment = itemView.findViewById(R.id.tvConTreatment);
             tvConDesc = itemView.findViewById(R.id.tvConDesc);
 
-            SessionManager sessionManager = new SessionManager(context);
-            String loggedInUserRole = sessionManager.getUserRole();
-
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+
+            SessionManager sessionManager = new SessionManager(context);
+            String loggedInUserRole = sessionManager.getUserRole();
 
             if (loggedInUserRole.equals("Patient")) {
                 btnEdit.setVisibility(View.GONE);

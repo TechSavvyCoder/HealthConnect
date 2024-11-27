@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class AppointmentFragment extends Fragment {
 
     private SessionManager sessionManager;
-    String loggedDoctorID;
+    String loggedInUserRole, loggedID;
     private RecyclerView recyclerView;
     private AppointmentAdapter appointmentAdapter;
 
@@ -29,37 +29,66 @@ public class AppointmentFragment extends Fragment {
     // Variables to store patient info
     String patient_id_from_bundle;
 
+    View view;
+
     public AppointmentFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sessionManager = new SessionManager(getContext());
-        loggedDoctorID = sessionManager.getUserId();
+        loggedInUserRole = sessionManager.getUserRole();
+        loggedID = sessionManager.getUserId();
 
-        View view = inflater.inflate(R.layout.fragment_appointment, container, false);
+        if (loggedInUserRole.equals("Doctor")) {
+            view = inflater.inflate(R.layout.fragment_appointment, container, false);
 
-        myDB = new MyDatabaseHelper(getContext());
-        app_id = new ArrayList<>();
-        patient_id = new ArrayList<>();
-        doctor_id = new ArrayList<>();
-        app_datetime = new ArrayList<>();
-        app_desc = new ArrayList<>();
-        app_status = new ArrayList<>();
+            myDB = new MyDatabaseHelper(getContext());
+            app_id = new ArrayList<>();
+            patient_id = new ArrayList<>();
+            doctor_id = new ArrayList<>();
+            app_datetime = new ArrayList<>();
+            app_desc = new ArrayList<>();
+            app_status = new ArrayList<>();
 
-        noAppointmentsMessage = view.findViewById(R.id.noAppointmentsMessage);
-        recyclerView = view.findViewById(R.id.rvAppointmentList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            noAppointmentsMessage = view.findViewById(R.id.noAppointmentsMessage);
+            recyclerView = view.findViewById(R.id.rvAppointmentList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Retrieve patient info from the arguments
-        if (getArguments() != null) {
-            patient_id_from_bundle = getArguments().getString("patient_id");
+            // Retrieve patient info from the arguments
+            if (getArguments() != null) {
+                patient_id_from_bundle = getArguments().getString("patient_id");
+            }
+
+            storeDataInArray(loggedID, patient_id_from_bundle);
+
+            appointmentAdapter = new AppointmentAdapter(getContext(), app_id, patient_id, doctor_id, app_datetime, app_desc, app_status);
+            recyclerView.setAdapter(appointmentAdapter);
+        } else {
+            view = inflater.inflate(R.layout.fragment_appointment, container, false);
+
+            myDB = new MyDatabaseHelper(getContext());
+            app_id = new ArrayList<>();
+            patient_id = new ArrayList<>();
+            doctor_id = new ArrayList<>();
+            app_datetime = new ArrayList<>();
+            app_desc = new ArrayList<>();
+            app_status = new ArrayList<>();
+
+            noAppointmentsMessage = view.findViewById(R.id.noAppointmentsMessage);
+            recyclerView = view.findViewById(R.id.rvAppointmentList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            // Retrieve patient info from the arguments
+            if (getArguments() != null) {
+                patient_id_from_bundle = getArguments().getString("doctor_id");
+            }
+
+            storeDataInArray(patient_id_from_bundle, loggedID);
+
+            appointmentAdapter = new AppointmentAdapter(getContext(), app_id, patient_id, doctor_id, app_datetime, app_desc, app_status);
+            recyclerView.setAdapter(appointmentAdapter);
         }
-
-        storeDataInArray(loggedDoctorID, patient_id_from_bundle);
-
-        appointmentAdapter = new AppointmentAdapter(getContext(), app_id, patient_id, doctor_id, app_datetime, app_desc, app_status);
-        recyclerView.setAdapter(appointmentAdapter);
 
         return view;
     }
