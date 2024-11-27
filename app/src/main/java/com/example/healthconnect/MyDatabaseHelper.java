@@ -93,7 +93,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         USER_COLUMN_DATECREATED + " TEXT, " +
                         USER_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-//        db.execSQL(query_user);
+        db.execSQL(query_user);
 
         String query_appointment =
                 "CREATE TABLE " + APPOINTMENT_TABLE + " ( " +
@@ -120,7 +120,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         CONSULTATION_COLUMN_DATECREATED + " TEXT, " +
                         CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-//        db.execSQL(query_consultation);
+        db.execSQL(query_consultation);
 
         String query_medication =
                 "CREATE TABLE " + MEDICATION_TABLE + " ( " +
@@ -133,7 +133,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         MEDICATION_COLUMN_DATECREATED + " TEXT, " +
                         MEDICATION_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-//        db.execSQL(query_medication);
+        db.execSQL(query_medication);
     }
 
     @Override
@@ -150,10 +150,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         // Recreate the database and tables
         SQLiteDatabase db = this.getWritableDatabase();
 
-//        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
-//        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
-//        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
 
         onCreate(db);
         db.close();

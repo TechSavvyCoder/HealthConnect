@@ -143,8 +143,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 101) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
+                Log.e("Notification", "__Notification granted");
             } else {
                 // Permission denied
+                Log.e("Notification", "__Notification denied");
             }
         }
     }
