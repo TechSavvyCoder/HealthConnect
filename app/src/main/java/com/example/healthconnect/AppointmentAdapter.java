@@ -154,8 +154,6 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         }
     }
 
-
-
     // Show the Edit Appointment Dialog
     private void showEditAppointmentDialog(int position) {
         LayoutInflater inflater = LayoutInflater.from(context);

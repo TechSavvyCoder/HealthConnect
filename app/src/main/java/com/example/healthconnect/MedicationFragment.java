@@ -62,7 +62,7 @@ public class MedicationFragment extends Fragment {
 
             storeDataInArray(loggedID, patient_id_from_bundle);
 
-            medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc);
+            medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc, loggedID, patient_id_from_bundle);
             recyclerView.setAdapter(medicationAdapter);
         } else {
             view = inflater.inflate(R.layout.fragment_medication, container, false);
@@ -86,7 +86,7 @@ public class MedicationFragment extends Fragment {
 
             storeDataInArray(patient_id_from_bundle, loggedID);
 
-            medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc);
+            medicationAdapter = new MedicationAdapter(getContext(), med_id, med_dateConsulted, med_dosage, med_frequency, med_duration, med_desc, patient_id_from_bundle, loggedID);
             recyclerView.setAdapter(medicationAdapter);
 
         }
