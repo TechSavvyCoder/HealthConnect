@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -27,7 +29,7 @@ public class Notification extends Service {
     String loggedInUserID, loggedInUserName;
 
     Handler handler = new Handler();
-    MyDatabaseHelper dbHelper; // Assuming you have a DBHelper class to manage SQLite
+    MyDatabaseHelper dbHelper;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,24 +39,23 @@ public class Notification extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        // Initialize the session manager
         sessionManager = new SessionManager(this);
         loggedInUserID = sessionManager.getUserId();
         loggedInUserName = sessionManager.getUserFirstName();
-        dbHelper = new MyDatabaseHelper(this); // Initialize your database helper
+        dbHelper = new MyDatabaseHelper(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handler.removeCallbacks(sendUpdates);
-        handler.postDelayed(sendUpdates, 1000); // 1 second
+        handler.postDelayed(sendUpdates, 1000);
         return START_STICKY;
     }
 
     private Runnable sendUpdates = new Runnable() {
         public void run() {
             matchTime();
-            handler.postDelayed(this, 50000); // 50-second notifier
+            handler.postDelayed(this, 50000);
         }
     };
 
@@ -65,78 +66,53 @@ public class Notification extends Service {
 
         String currentDate = dateFormat.format(calendar.getTime());
 
-        // Add 1 day to current date
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         String targetDate = dateFormat.format(calendar.getTime());
 
-        // Fetch appointments from database
+        List<Appointment> appointments = dbHelper.getAppointmentsForNotification(loggedInUserID, "Pending");
+        for (Appointment appointment : appointments) {
+            int appointmentId = appointment.getId();
+            String appointmentDate = appointment.getDate();
 
-        createNotification("2024-11-23");
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd");
 
-        List<String> appointmentDates = dbHelper.getAllAppointmentsPerDoctor(loggedInUserID); // Retrieve dates as a list
-//        for (String appointmentDate : appointmentDates) {
-//
-//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm"); // Input with time
-//            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd");
-//
-//            try {
-//                // Parse the input date
-//                Date date = inputFormat.parse(appointmentDate);
-//                // Format it to the desired output
-//                appointmentDate = outputFormat.format(date);
-//            } catch (ParseException e) {
-//                Log.e("DateUtils", "Error parsing date: " + e.getMessage());
-//            }
-//
-//            Log.d("MatchTime", "AppointmentDate++" + appointmentDate);
-//            Log.d("MatchTime", "TargetDate++" + targetDate);
-//            if (appointmentDate.equals(targetDate)) {
-//                // Schedule a notification
-//                createNotification(appointmentDate);
-//
-//                Log.d("MatchTime", "___Checking for appointments...");
-//                Log.d("MatchTime", "___Notification created for: " + appointmentDate);
-//            }
-//        }
+            try {
+                Date date = inputFormat.parse(appointmentDate);
+                appointmentDate = outputFormat.format(date);
+            } catch (ParseException e) {
+                Log.e("DateUtils", "Error parsing date: " + e.getMessage());
+            }
+
+            if (appointmentDate.equals(targetDate)) {
+                createNotification(appointmentDate);
+                dbHelper.updateNotificationStatus(appointmentId, true);
+            }
+        }
     }
 
     private void createNotification(String appointmentDate) {
-        String channelId = "AppointmentNotifications";
+        String channelId = "AppointmentIDNotifications";
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setContentTitle("Appointment Reminder")
+                .setContentText("You have an appointment coming up")
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (notificationManager == null) {
-            Log.e("Notification", "___NotificationManager is null");
-            return;
-        } else {
-            Log.e("Notification", "___NotificationManager is not null");
-        }
-
-        // Create Notification Channel (For Android 8.0 and above)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    "Appointment Reminders",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            notificationManager.createNotificationChannel(channel);
-            Log.d("NotificationTest", "___Notification Channel Created");
-
+            NotificationChannel notificationChannel = notificationManager.getNotificationChannel(channelId);
+            if (notificationChannel == null) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                notificationChannel = new NotificationChannel(channelId, "Appointment Reminders", importance);
+                notificationChannel.setLightColor(Color.BLUE);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
         }
 
-        // Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setContentTitle("Appointment Reminder")
-                .setContentText("You have an appointment scheduled on " + appointmentDate)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
-
-        // Show the notification
-        Log.d("NotificationTest", "___Preparing to show notification...");
-        int notificationId = 1;  // Use a constant ID for simplicity
-        notificationManager.notify(notificationId, builder.build());
-        Log.d("NotificationTest", "___Notification should now be visible.");
-
+        notificationManager.notify(0, builder.build());
     }
 }

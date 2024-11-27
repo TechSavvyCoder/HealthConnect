@@ -33,7 +33,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         // Initialize the database helper
         dbHelper = new MyDatabaseHelper(this);
 
-        // Temp Timer (To show the onboarding process)
         TimerTask task = new TimerTask() {
             @Override
             public void run() {

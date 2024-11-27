@@ -1,11 +1,13 @@
 package com.example.healthconnect;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -57,8 +62,15 @@ public class MainActivity extends AppCompatActivity {
             TextView tvLoggedUser= findViewById(R.id.tvLoggedUser);
             tvLoggedUser.setText("Hi, " + loggedInUserName + "!");
 
-            // Start the MatchTime service
-            Intent serviceIntent = new Intent(this, Notification.class);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                if(ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_DENIED){
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+                }
+            }
+
+            Intent serviceIntent = new Intent(getApplicationContext(), Notification.class);
             startService(serviceIntent);
 
             signOut();
@@ -125,6 +137,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+            } else {
+                // Permission denied
+            }
+        }
+    }
 
     public void signOut() {
         btnSignOut = (FloatingActionButton) findViewById(R.id.btnSignOut);

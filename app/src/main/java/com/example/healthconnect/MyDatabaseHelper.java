@@ -46,6 +46,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String APPOINTMENT_COLUMN_DATETIME = "appointment_dateTime";
     private static final String APPOINTMENT_COLUMN_STATUS = "appointment_status";
     private static final String APPOINTMENT_COLUMN_DESC = "appointment_desc";
+    private static final String APPOINTMENT_COLUMN_ISNOTIFIED = "is_notified";
     private static final String APPOINTMENT_COLUMN_DATECREATED = "date_created";
     private static final String APPOINTMENT_COLUMN_DATEUPDATED = "date_updated";
 
@@ -92,7 +93,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         USER_COLUMN_DATECREATED + " TEXT, " +
                         USER_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-        db.execSQL(query_user);
+//        db.execSQL(query_user);
 
         String query_appointment =
                 "CREATE TABLE " + APPOINTMENT_TABLE + " ( " +
@@ -102,6 +103,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         APPOINTMENT_COLUMN_DATETIME + " TEXT NOT NULL, " +
                         APPOINTMENT_COLUMN_DESC + " TEXT, " +
                         APPOINTMENT_COLUMN_STATUS + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_ISNOTIFIED + " INTEGER NOT NULL, " +
                         APPOINTMENT_COLUMN_DATECREATED + " TEXT, " +
                         APPOINTMENT_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
@@ -118,7 +120,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         CONSULTATION_COLUMN_DATECREATED + " TEXT, " +
                         CONSULTATION_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-        db.execSQL(query_consultation);
+//        db.execSQL(query_consultation);
 
         String query_medication =
                 "CREATE TABLE " + MEDICATION_TABLE + " ( " +
@@ -131,7 +133,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         MEDICATION_COLUMN_DATECREATED + " TEXT, " +
                         MEDICATION_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
-        db.execSQL(query_medication);
+//        db.execSQL(query_medication);
     }
 
     @Override
@@ -148,10 +150,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         // Recreate the database and tables
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+//        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + APPOINTMENT_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + CONSULTATION_TABLE);
+//        db.execSQL("DROP TABLE IF EXISTS " + MEDICATION_TABLE);
 
         onCreate(db);
         db.close();
@@ -186,6 +188,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         APPOINTMENT_COLUMN_DATETIME + " TEXT NOT NULL, " +
                         APPOINTMENT_COLUMN_DESC + " TEXT, " +
                         APPOINTMENT_COLUMN_STATUS + " TEXT NOT NULL, " +
+                        APPOINTMENT_COLUMN_ISNOTIFIED + " INTEGER NOT NULL, " +
                         APPOINTMENT_COLUMN_DATECREATED + " TEXT, " +
                         APPOINTMENT_COLUMN_DATEUPDATED + " TEXT " +
                         " );";
@@ -274,6 +277,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(APPOINTMENT_COLUMN_DATETIME, app_datetime);
         cv.put(APPOINTMENT_COLUMN_DESC, app_desc);
         cv.put(APPOINTMENT_COLUMN_STATUS, app_status);
+        cv.put(APPOINTMENT_COLUMN_ISNOTIFIED, "0");
         cv.put(APPOINTMENT_COLUMN_DATECREATED, date_created);
 
         long result = db.insert(APPOINTMENT_TABLE, null, cv);
@@ -395,21 +399,35 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<String> getAllAppointmentsPerDoctor(String doctor_ID) {
-        List<String> dates = new ArrayList<>();
+    public List<Appointment> getAppointmentsForNotification(String doctor_ID, String status) {
+        List<Appointment> appointments = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT " + APPOINTMENT_COLUMN_DATETIME + " FROM " + APPOINTMENT_TABLE +
+        String query = "SELECT " + APPOINTMENT_COLUMN_ID + ", " + APPOINTMENT_COLUMN_DATETIME +
+                " FROM " + APPOINTMENT_TABLE +
                 " WHERE " + APPOINTMENT_COLUMN_DOCTORID + " = ? " +
+                " AND " + APPOINTMENT_COLUMN_STATUS + " = ? " +
+                " AND " + APPOINTMENT_COLUMN_ISNOTIFIED + " = 0 " + // Only fetch unnotified appointments
                 " ORDER BY " + APPOINTMENT_COLUMN_DATETIME + " ASC";
-        Cursor cursor = db.rawQuery(query, new String[]{doctor_ID});
+        Cursor cursor = db.rawQuery(query, new String[]{doctor_ID, status});
 
         if (cursor.moveToFirst()) {
             do {
-                dates.add(cursor.getString(0));
+                int id = cursor.getInt(0);
+                String datetime = cursor.getString(1);
+                appointments.add(new Appointment(id, datetime));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return dates;
+        return appointments;
+    }
+
+
+    public void updateNotificationStatus(int appointmentId, boolean isNotified) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(APPOINTMENT_COLUMN_ISNOTIFIED, isNotified ? 1 : 0);
+
+        db.update(APPOINTMENT_TABLE, values, APPOINTMENT_COLUMN_ID + " = ?", new String[]{String.valueOf(appointmentId)});
     }
 
     public Cursor getAllAppointments(String doctor_ID, String curr_Patient_ID) {
