@@ -32,29 +32,30 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Initialize the database helper
         dbHelper = new MyDatabaseHelper(this);
-        resetSession();
+//        resetSession();
+//        resetDatabase();
 
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (isFirstRun) {
+//                if (isFirstRun) {
                     // If it's the first run, show Onboarding Step 1
                     startActivity(new Intent(SplashScreenActivity.this, OnboardingStep1Activity.class));
 
                     // Update shared preferences to indicate that onboarding has been completed
-                    preferences.edit().putBoolean(KEY_IS_FIRST_RUN, false).apply();
-                } else {
-                    if (isLoggedIn) {
-                        if(userRole.equals("Doctor")){
-                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-                        } else if(userRole.equals("Patient")){
-                            startActivity(new Intent(SplashScreenActivity.this, Patient_Profile.class));
-                        }
-                    } else {
-                        // If not first run and user is not logged in, show Onboarding Step 3
-                        startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
-                    }
-                }
+//                    preferences.edit().putBoolean(KEY_IS_FIRST_RUN, false).apply();
+//                } else {
+//                    if (isLoggedIn) {
+//                        if(userRole.equals("Doctor")){
+//                            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+//                        } else if(userRole.equals("Patient")){
+//                            startActivity(new Intent(SplashScreenActivity.this, Patient_Profile.class));
+//                        }
+//                    } else {
+//                        // If not first run and user is not logged in, show Onboarding Step 3
+//                        startActivity(new Intent(SplashScreenActivity.this, OnboardingStep3Activity.class));
+//                    }
+//                }
                 finish();
             }
         };
