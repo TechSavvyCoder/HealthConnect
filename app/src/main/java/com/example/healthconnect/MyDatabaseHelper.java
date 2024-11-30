@@ -373,7 +373,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     // Function to RETRIEVE entries
     public Cursor getAllPatient(String doctor_ID) {
         String query = "SELECT * FROM " + USER_TABLE_NAME + " " +
-                "WHERE user_role = 'Patient' AND " + USER_COLUMN_DOCTORID + " = " + doctor_ID;
+                "WHERE user_role = 'Patient' AND " + USER_COLUMN_DOCTORID + " = " + doctor_ID +
+                " ORDER BY " + USER_COLUMN_FIRSTNAME + " ASC ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
 
