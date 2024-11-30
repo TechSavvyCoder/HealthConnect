@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +15,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     MyDatabaseHelper dbHelper;
     private static final String PREFS_NAME = "OnboardingProcedures";
+    private static final String KEY_IS_FIRST_INSTALLED = "isFirstInstalled";
     private static final String KEY_IS_FIRST_RUN = "isFirstRun";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private static final String KEY_USER_ROLE = "userRole";
@@ -25,6 +27,21 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Initialize the database helper
         dbHelper = new MyDatabaseHelper(this);
+
+        // SharedPreferences instance
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        boolean isFirstInstalled = preferences.getBoolean(KEY_IS_FIRST_INSTALLED, true);
+
+        if (isFirstInstalled) {
+            try {
+                dbHelper.copyDatabase();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            preferences.edit().putBoolean(KEY_IS_FIRST_INSTALLED, false).apply();
+        }
 
         TimerTask task = new TimerTask() {
             @Override
