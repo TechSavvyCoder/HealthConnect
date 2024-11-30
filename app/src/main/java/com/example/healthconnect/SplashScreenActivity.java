@@ -25,8 +25,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Initialize the database helper
         dbHelper = new MyDatabaseHelper(this);
-//        resetSession();
-//        resetDatabase();
 
         TimerTask task = new TimerTask() {
             @Override
